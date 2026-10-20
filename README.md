@@ -54,7 +54,7 @@ Palette: ![#120c07](https://img.shields.io/badge/-%23120c07-120c07?style=flat-sq
 Fonts: Bricolage Grotesque, Onest (Google Fonts). Change both through the CSS variables in the `:root` block at the top of `<head>`. A big display line with `style="--len:N"` fills its width: set N to its new number of characters.
 
 - The outlined display words (the first headline line, POURING, OVERHEARD, the footer wordmark) fill their letters with the page's dark ground to hide overlapping contours: keep them on the dark ground, or change the fill colour together with the background.
-- Each beer's colour comes from a CSS variable (--color-4 … --color-7 and --color-3): the same variables colour the on-tap cards and the flight swatches, so a recolour stays consistent.
+- Each beer's colour comes from a CSS variable (--color-4 … --color-7 and --color-3), and each flight swatch takes a colour variable too, not always the same one as the beer's card: after a recolour, check that each card and its swatch still match.
 
 ## Before you publish
 
@@ -67,4 +67,4 @@ GSAP 3.13.0, ScrollTrigger, SplitText, Lenis 1.3.27 from jsDelivr, 96 KB, no bui
 
 ## License
 
-MIT, see [LICENSE](LICENSE); the "Design: 8B" footer link is welcome, not required. Photos, fonts and libraries keep their own licences: [CREDITS.md](CREDITS.md). More free templates: [8b.com/templates](https://8b.com/templates/) · [github.com/8bsite](https://github.com/8bsite).
+MIT, see [LICENSE](LICENSE). Photos, fonts and libraries keep their own licences: [CREDITS.md](CREDITS.md). More free templates: [8b.com/templates](https://8b.com/templates/) · [github.com/8bsite](https://github.com/8bsite).

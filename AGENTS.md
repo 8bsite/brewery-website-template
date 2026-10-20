@@ -30,7 +30,7 @@ In Windows PowerShell type `curl.exe`. Publish `index.html` with LICENSE and CRE
 - Colours, fonts, radii and shadows are CSS variables in the `:root` block (`data-8b-part="tokens"`); change them there and keep body text at 4.5:1 contrast or more.
 - Animations run only when the visitor allows motion (`prefers-reduced-motion: no-preference`); the page must stay readable without them.
 - A display line with `style="--len:N"` is sized to fill its width: N is its number of characters, spaces included (`pouring` → 7, `Overheard` → 9).
-- Keep the header comment and `<meta name="generator">`; the "Design: 8B" footer link is optional.
+- Keep the header comment and `<meta name="generator">`. Keep the "Design: 8B" footer link unless the site owner asks to remove it.
 
 ## Replace before publishing
 - Everything marked `data-8b-placeholder` (og-image, favicon, map, phone, email, form, social); remove the attribute once the real value is in. With no real value: no preview image — delete the `og:image` tag and set `twitter:card` to `summary`; no phone, email or address — remove that link or row.
@@ -60,7 +60,7 @@ In Windows PowerShell type `curl.exe`. Publish `index.html` with LICENSE and CRE
 
 ## Notes
 - The outlined display words (the first headline line, POURING, OVERHEARD, the footer wordmark) fill their letters with the page's dark ground to hide overlapping contours: keep them on the dark ground, or change the fill colour together with the background.
-- Each beer's colour comes from a CSS variable (--color-4 … --color-7 and --color-3): the same variables colour the on-tap cards and the flight swatches, so a recolour stays consistent.
+- Each beer's colour comes from a CSS variable (--color-4 … --color-7 and --color-3), and each flight swatch takes a colour variable too, not always the same one as the beer's card: after a recolour, check that each card and its swatch still match.
 - The booking form, the flight picker and the newsletter form only show a message on the page; nothing is sent until you connect them.
 - Without JavaScript or with reduced motion, the brew-day wheel is a plain row of steps and the tap list a static staircase: complete, but without the wheel.
 - There is no age check or responsible-drinking notice; add one if your local rules require it.
