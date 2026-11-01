@@ -4,6 +4,7 @@
   Source: https://github.com/8bsite/brewery-website-template
   MIT License (code) https://8b.com/ · Photos: Unsplash License, see CREDITS.md · Fonts: Google Fonts (OFL)
   One HTML file, no build step. Notes for people and AI agents: README.md and AGENTS.md.
+  Scroll motion: CSS scroll-driven animations and an inline script, no libraries. A GSAP build of this page: index.gsap.html.
 -->
 <html lang="en">
 <head>
@@ -144,10 +145,6 @@
 @font-face { font-family: "Onest Fallback"; src: local("Arial"), local("ArialMT"), local("Helvetica"); font-weight: 100 549; size-adjust: 106.7%; ascent-override: 90.9%; descent-override: 29%; line-gap-override: 0%; }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-html.lenis, html.lenis body { height: auto; }
-.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
-.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-smooth iframe { pointer-events: none; }
 body {
   margin: 0;
   background: var(--color-1);
@@ -848,39 +845,219 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 }
 </style>
-<style data-8b-part="scene-style:wheel">
+<style data-8b-part="motion">
+@layer scenes {
+[data-8b-live] { --ease-power3-out: linear(0, 0.0963, 0.1855, 0.2679, 0.3439, 0.4138, 0.478, 0.5367, 0.5904, 0.6392, 0.6836, 0.7237, 0.7599, 0.7924, 0.8215, 0.8474, 0.8704, 0.8907, 0.9085, 0.924, 0.9375, 0.9491, 0.959, 0.9674, 0.9744, 0.9802, 0.985, 0.9888, 0.9919, 0.9943, 0.9961, 0.9974, 0.9984, 0.9991, 0.9995, 0.9998, 0.9999, 1, 1, 1, 1); }
+[data-8b-live] [data-8b-motion~="rise"] .line { animation-name: motion-rise-line-translate, motion-rise-line-opacity; animation-duration: 0.8s; animation-delay: calc(0s + 0.09s * var(--i)); animation-timing-function: var(--ease-power3-out), cubic-bezier(0.25, 1, 0.5, 1); animation-fill-mode: both; animation-play-state: paused; transform: none; }
+[data-8b-live] [data-8b-motion~="rise"].is-in .line { animation-play-state: running; }
+@keyframes motion-rise-line-translate { 0% { translate: 0px 70%; } 100% { translate: 0px 0px; } }
+@keyframes motion-rise-line-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+[data-8b-live] [data-8b-motion~="hang"] { --motion-hang-angle: -13deg; transform-origin: 50% 0%; animation: motion-hang 1.5s linear(0, 0.099, 0.2172, 0.3471, 0.4817, 0.615, 0.742, 0.8589, 0.9626, 1.0513, 1.1239, 1.1802, 1.2204, 1.2457, 1.2575, 1.2573, 1.2472, 1.2291, 1.205, 1.1767, 1.1461, 1.1146, 1.0837, 1.0545, 1.0278, 1.0043, 0.9843, 0.9682, 0.9558, 0.9471, 0.9419, 0.9397, 0.9403, 0.943, 0.9476, 0.9534, 0.9602, 0.9674, 0.9747, 0.9819, 0.9886, 0.9947, 1, 1.0045, 1.0081, 1.0108, 1.0126, 1.0137, 1.0141, 1.0138, 1.0131, 1.012, 1.0106, 1.009, 1.0073, 1.0056, 1.0039, 1.0024, 1.001, 0.9998, 0.9988, 0.998, 0.9974, 0.997, 0.9968, 0.9967, 0.9968, 0.997, 0.9973, 0.9976, 0.998, 0.9984, 0.9988, 0.9992, 0.9995, 0.9998, 1.0001, 1.0003, 1.0005, 1.0006, 1) calc(0.12s * var(--i, 0)) both paused; }
+[data-8b-live] [data-8b-motion~="hang"]:nth-child(even) { --motion-hang-angle: 13deg; }
+@media (max-width: 759.98px) {
+  [data-8b-live] [data-8b-motion~="hang"] { --motion-hang-angle: -6deg; }
+  [data-8b-live] [data-8b-motion~="hang"]:nth-child(even) { --motion-hang-angle: 6deg; }
+}
+[data-8b-live] [data-8b-motion~="hang"].is-in { animation-play-state: running; }
+@keyframes motion-hang { 0% { rotate: var(--motion-hang-angle); translate: 0 -26px; } 100% { rotate: 0deg; translate: 0 0; } }
+[data-8b-live] [data-8b-motion~="pour"] { animation: motion-pour 0.5s cubic-bezier(0.45, 0, 0.55, 1) both paused; }
+[data-8b-live] [data-8b-motion~="pour"].is-in { animation-play-state: running; }
+@keyframes motion-pour { 0% { clip-path: inset(100% 0% 0% 0%); } 100% { clip-path: inset(0% 0% 0% 0%); } }
+}
+</style>
+<style data-8b-part="scene:opening">
 @layer scenes {
 @media (prefers-reduced-motion: no-preference) {
-  #brew-day[data-wheel] { --bd-r: 1150px; --bd-step: 22deg; --bd-w: 360px; --bd-top: 36svh; height: calc(100svh + 4 * 80svh); padding: 0; }
-  #brew-day[data-wheel] .bd__photo { width: min(180px, 22svh); height: min(180px, 22svh); }
-  #brew-day[data-wheel] .bd__text { font-size: 16px; }
-  #brew-day[data-wheel] .bd__stage { position: sticky; top: 0; height: 100svh; overflow: clip; padding-top: 92px; }
-  #brew-day[data-wheel] .bd__title { width: min(780px, 88vw); margin: 0 auto; }
-  #brew-day[data-wheel] .bd__rim { display: block; position: absolute; left: calc(50% - var(--bd-r)); top: var(--bd-top); width: calc(var(--bd-r) * 2); aspect-ratio: 1; border: 2px dashed color-mix(in srgb, var(--color-2) 40%, transparent); border-radius: 50%; }
-  #brew-day[data-wheel] .bd__wheel { display: block; position: absolute; left: 50%; top: calc(var(--bd-top) + var(--bd-r)); width: 0; height: 0; max-width: none; margin: 0; }
-  #brew-day[data-wheel] .bd__station { position: absolute; left: calc(var(--bd-w) / -2); top: calc(var(--bd-r) * -1 - 64px); width: var(--bd-w); transform-origin: 50% calc(var(--bd-r) + 64px); }
-  #brew-day[data-wheel] .bd__num { background: var(--color-1); padding: 0 14px; line-height: 1; }
+  [data-8b-live] #opening .op__screen--2 { background: transparent; }
+}
+}
+@layer scenes {
+[data-8b-live] { --ease-cb0991: linear(0, 0.1207, 0.2329, 0.3369, 0.433, 0.5215, 0.6026, 0.6767, 0.744, 0.8048, 0.8594, 0.908, 0.951, 0.9886, 1.0211, 1.0488, 1.072, 1.0909, 1.1059, 1.1171, 1.125, 1.1297, 1.1316, 1.131, 1.128, 1.123, 1.1164, 1.1083, 1.099, 1.0889, 1.0781, 1.0671, 1.056, 1.0452, 1.0349, 1.0254, 1.017, 1.01, 1.0046, 1.0012, 1); }
+[data-8b-live] #opening { view-timeline: --opening-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #opening .op__disc, [data-8b-live] #opening .op__orbit, [data-8b-live] #opening .op__pint, [data-8b-live] #opening .op__base, [data-8b-live] #opening-title, [data-8b-live] #opening .op__manifesto > span:nth-of-type(-n+2) { animation-timeline: --opening-t1; animation-fill-mode: both; }
+[data-8b-live] #opening .op__disc { animation-name: opening-div-op-disc-scale; animation-range: cover 100vh cover calc(100% - 100vh); animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); transform: none; }
+[data-8b-live] #opening .op__orbit { animation-name: opening-div-op-orbit-scale, opening-div-op-orbit-rotate; animation-range: cover 100vh cover 50%; animation-timing-function: cubic-bezier(0.3333, 0, 0.6667, 0.3333); transform: none; }
+[data-8b-live] #opening .op__pint { animation-range: cover 100vh cover calc(70% - 40vh); animation-timing-function: cubic-bezier(0.3333, 0, 0.6667, 0.3333); transform: none; }
+[data-8b-live] #opening .op__base, [data-8b-live] #opening-title { animation-name: opening-div-op-base-color; animation-timing-function: linear; }
+[data-8b-live] #opening .op__base { animation-range: cover calc(2% + 96vh) cover calc(12% + 76vh); }
+[data-8b-live] #opening-title { animation-range: cover calc(5% + 90vh) cover calc(21% + 58vh); }
+[data-8b-live] #opening .op__manifesto > span:nth-of-type(1) { animation-name: opening-span-op-chip-scale, opening-span-op-chip-rotate; animation-range: cover calc(42% + 16vh) cover calc(60% - 20vh); animation-timing-function: var(--ease-cb0991); transform: none; }
+[data-8b-live] #opening .op__manifesto > span:nth-of-type(2) { animation-name: opening-span-op-chip-scale, opening-span-op-chip-rotate-2; animation-range: cover calc(52% - 4vh) cover calc(70% - 40vh); animation-timing-function: var(--ease-cb0991); transform: none; }
+@keyframes opening-div-op-disc-scale { 0% { scale: 1; } 100% { scale: var(--opening-cover, 5.3796); } }
+@keyframes opening-div-op-orbit-scale { 0% { scale: 1; } 100% { scale: 1.7; } }
+@keyframes opening-div-op-orbit-rotate { 0% { rotate: 0deg; } 100% { rotate: -30deg; } }
+@keyframes opening-figure-op-pint-translate-d { 0% { translate: 0px 0px; } 100% { translate: 0px -88.564%; } }
+@keyframes opening-figure-op-pint-translate-m { 0% { translate: 0px 0px; } 100% { translate: 0px -35vh; } }
+@keyframes opening-figure-op-pint-rotate { 0% { rotate: 0deg; } 100% { rotate: -12deg; } }
+@keyframes opening-figure-op-pint-scale { 0% { scale: 1; } 100% { scale: 0.82; } }
+@keyframes opening-div-op-base-color { 0% { color: var(--color-2); } 100% { color: var(--color-1); } }
+@keyframes opening-span-op-chip-scale { 0% { scale: 0; } 0.002% { scale: 0.0028; } 100% { scale: 1; } }
+@keyframes opening-span-op-chip-rotate { 0% { rotate: -20deg; } 100% { rotate: 0deg; } }
+@keyframes opening-span-op-chip-rotate-2 { 0% { rotate: 20deg; } 100% { rotate: 0deg; } }
+@media (min-width: 761px) {
+  [data-8b-live] #opening .op__pint { animation-name: opening-figure-op-pint-translate-d, opening-figure-op-pint-rotate, opening-figure-op-pint-scale; }
+}
+@media (max-width: 760px) {
+  [data-8b-live] #opening .op__pint { animation-name: opening-figure-op-pint-translate-m, opening-figure-op-pint-rotate, opening-figure-op-pint-scale; }
+}
+}
+</style>
+<style data-8b-part="scene:tags-swing">
+@layer scenes {
+[data-8b-live] { --ease-a21692: linear(0, 0.1302, 0.2509, 0.3626, 0.4654, 0.5598, 0.646, 0.7243, 0.7952, 0.8589, 0.9156, 0.9658, 1.0098, 1.0478, 1.0803, 1.1074, 1.1296, 1.1471, 1.1603, 1.1695, 1.175, 1.1771, 1.1762, 1.1725, 1.1664, 1.1582, 1.1482, 1.1368, 1.1242, 1.1108, 1.0969, 1.0828, 1.0688, 1.0553, 1.0425, 1.0309, 1.0206, 1.0121, 1.0056, 1.0014, 1); }
+[data-8b-live] #no-shortcuts { view-timeline: --no-shortcuts-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #no-shortcuts .ns__list { view-timeline: --no-shortcuts-t2 block; view-timeline-inset: 0; }
+[data-8b-live] #no-shortcuts .ns__float--1, [data-8b-live] #no-shortcuts .ns__float--2, [data-8b-live] #no-shortcuts .ns__float--3, [data-8b-live] #no-shortcuts .ns__float--4 { animation-timeline: --no-shortcuts-t1; animation-range: cover 0% cover 85vh; animation-timing-function: cubic-bezier(0.3333, 0.6667, 0.6667, 1); }
+[data-8b-live] #no-shortcuts .ns__float--1 { animation-name: no-shortcuts-figure-ns-float-translate; animation-fill-mode: both; transform: none; }
+[data-8b-live] #no-shortcuts .ns__float--2, [data-8b-live] #no-shortcuts .ns__float--3 { animation-name: no-shortcuts-figure-ns-float-translate-2; animation-fill-mode: both; transform: none; }
+[data-8b-live] #no-shortcuts .ns__float--4 { animation-name: no-shortcuts-figure-ns-float-translate; animation-fill-mode: both; transform: none; }
+[data-8b-live] #no-shortcuts .ns__list > li { animation-timeline: --no-shortcuts-t2; animation-range: cover calc(12vh - 13.3805vh * var(--i) + 18.5841% * var(--i)) cover calc(44.2478% + 18.5841% * var(--i) - 19.8584vh - 13.3805vh * var(--i)); animation-timing-function: var(--ease-a21692); animation-fill-mode: both; transform: none; }
+@keyframes no-shortcuts-figure-ns-float-translate { 0% { translate: 0px 160px; } 100% { translate: 0px 0px; } }
+@keyframes no-shortcuts-figure-ns-float-translate-2 { 0% { translate: 0px 380px; } 100% { translate: 0px 0px; } }
+@keyframes no-shortcuts-li-ns-card-rotate-d { 0% { rotate: var(--no-shortcuts-li-ns-card-rotate-from, -22deg); } 100% { rotate: var(--no-shortcuts-li-ns-card-rotate-to, -2deg); } }
+@keyframes no-shortcuts-li-ns-card-rotate-m { 0% { rotate: var(--no-shortcuts-li-ns-card-rotate-from-m, -13deg); } 100% { rotate: var(--no-shortcuts-li-ns-card-rotate-to, -2deg); } }
+@keyframes no-shortcuts-li-ns-card-translate-d { 0% { translate: -70px -70px; } 100% { translate: -70px 0px; } }
+@keyframes no-shortcuts-li-ns-card-translate-m { 0% { translate: -10px -70px; } 100% { translate: -10px 0px; } }
+@keyframes no-shortcuts-li-ns-card-translate-2-d { 0% { translate: 64px -106px; } 100% { translate: 64px 0px; } }
+@keyframes no-shortcuts-li-ns-card-translate-2-m { 0% { translate: 10px -106px; } 100% { translate: 10px 0px; } }
+@keyframes no-shortcuts-li-ns-card-translate-3-d { 0% { translate: -46px -142px; } 100% { translate: -46px 0px; } }
+@keyframes no-shortcuts-li-ns-card-translate-3-m { 0% { translate: -10px -142px; } 100% { translate: -10px 0px; } }
+@keyframes no-shortcuts-li-ns-card-translate-4-d { 0% { translate: 80px -178px; } 100% { translate: 80px 0px; } }
+@keyframes no-shortcuts-li-ns-card-translate-4-m { 0% { translate: 10px -178px; } 100% { translate: 10px 0px; } }
+@media (min-width: 761px) {
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(1) { animation-name: no-shortcuts-li-ns-card-rotate-d, no-shortcuts-li-ns-card-translate-d; }
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(2) { animation-name: no-shortcuts-li-ns-card-rotate-d, no-shortcuts-li-ns-card-translate-2-d; }
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(3) { animation-name: no-shortcuts-li-ns-card-rotate-d, no-shortcuts-li-ns-card-translate-3-d; }
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(4) { animation-name: no-shortcuts-li-ns-card-rotate-d, no-shortcuts-li-ns-card-translate-4-d; }
+}
+@media (max-width: 760px) {
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(1) { animation-name: no-shortcuts-li-ns-card-rotate-m, no-shortcuts-li-ns-card-translate-m; }
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(2) { animation-name: no-shortcuts-li-ns-card-rotate-m, no-shortcuts-li-ns-card-translate-2-m; }
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(3) { animation-name: no-shortcuts-li-ns-card-rotate-m, no-shortcuts-li-ns-card-translate-3-m; }
+  [data-8b-live] #no-shortcuts .ns__list > li:nth-of-type(4) { animation-name: no-shortcuts-li-ns-card-rotate-m, no-shortcuts-li-ns-card-translate-4-m; }
+}
+}
+</style>
+<style data-8b-part="scene:pour-steps">
+@layer scenes {
+[data-8b-live] { --ease-power1-out: linear(0, 0.0494, 0.0975, 0.1444, 0.19, 0.2344, 0.2775, 0.3194, 0.36, 0.3994, 0.4375, 0.4744, 0.51, 0.5444, 0.5775, 0.6094, 0.64, 0.6694, 0.6975, 0.7244, 0.75, 0.7744, 0.7975, 0.8194, 0.84, 0.8594, 0.8775, 0.8944, 0.91, 0.9244, 0.9375, 0.9494, 0.96, 0.9694, 0.9775, 0.9844, 0.99, 0.9944, 0.9975, 0.9994, 1); --ease-power2-inout: linear(0, 0.0001, 0.0005, 0.0017, 0.004, 0.0078, 0.0135, 0.0214, 0.032, 0.0456, 0.0625, 0.0832, 0.108, 0.1373, 0.1715, 0.2109, 0.256, 0.3071, 0.3645, 0.4287, 0.5, 0.5713, 0.6355, 0.6929, 0.744, 0.7891, 0.8285, 0.8627, 0.892, 0.9168, 0.9375, 0.9544, 0.968, 0.9786, 0.9865, 0.9922, 0.996, 0.9983, 0.9995, 0.9999, 1); }
+[data-8b-live] #on-tap .m-text-3 { view-timeline: --on-tap-t1 block; view-timeline-inset: 0; animation-name: on-tap-span-m-text-3-translate; animation-timeline: --on-tap-t1; animation-range: cover 0% cover calc(100% - 40vh); animation-timing-function: linear; animation-fill-mode: both; transform: none; }
+[data-8b-live] #on-tap .tap__stairs > li > .tap__fill { animation-name: on-tap-div-tap-fill-clippath; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); animation-fill-mode: both; }
+[data-8b-live] #on-tap .tap__stairs > li > .m-text-4, [data-8b-live] #on-tap .tap__stairs > li > .tap__style, [data-8b-live] #on-tap .tap__stairs > li > .tap__photo, [data-8b-live] #on-tap .tap__stairs > li > .m-text, [data-8b-live] #on-tap .tap__stairs > li > .tap__price { animation-name: on-tap-h3-m-text-4-opacity; animation-timing-function: var(--ease-power1-out); animation-fill-mode: both; }
+@keyframes on-tap-span-m-text-3-translate { 0% { translate: 14% 0px; } 100% { translate: 0px 0px; } }
+@keyframes on-tap-li-tap-card-translate { 0% { translate: 0px 0px; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 100% { translate: 0px 0px; } }
+@keyframes on-tap-div-tap-fill-clippath { 0% { clip-path: inset(100% 0% 0%); } 100% { clip-path: inset(0%); } }
+@keyframes on-tap-li-tap-card-translate-2 { 0% { translate: 0px -48px; } 100% { translate: 0px 0px; } }
+@keyframes on-tap-h3-m-text-4-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes on-tap-li-tap-card-translate-3 { 0% { translate: 0px -96px; } 100% { translate: 0px 0px; } }
+@keyframes on-tap-li-tap-card-translate-4 { 0% { translate: 0px -144px; } 100% { translate: 0px 0px; } }
+@keyframes on-tap-li-tap-card-translate-5 { 0% { translate: 0px -192px; } 100% { translate: 0px 0px; } }
+@media (min-width: 900px) {
+  [data-8b-live] #on-tap .tap__stairs { view-timeline: --on-tap-t2 block; view-timeline-inset: 0; }
+  [data-8b-live] #on-tap .tap__stairs > li { animation-timeline: --on-tap-t2; animation-range: cover calc(18vh - 15.7377vh * var(--i) + 16.3934% * var(--i)) cover calc(32.7869% + 16.3934% * var(--i) - 13.4754vh - 15.7377vh * var(--i)); animation-fill-mode: both; transform: none; }
+  [data-8b-live] #on-tap .tap__card--1 { animation-name: on-tap-li-tap-card-translate; animation-timing-function: linear; }
+  [data-8b-live] #on-tap .tap__stairs > li > .tap__fill { animation-timeline: --on-tap-t2; animation-range: cover calc(4.918% + 16.3935% * var(--i) + 13.2787vh - 15.7377vh * var(--i)) cover calc(34.4262% + 16.3935% * var(--i) - 15.0492vh - 15.7377vh * var(--i)); }
+  [data-8b-live] #on-tap .tap__card--2 { animation-name: on-tap-li-tap-card-translate-2; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+  [data-8b-live] #on-tap .tap__stairs > li > .m-text-4, [data-8b-live] #on-tap .tap__stairs > li > .tap__style, [data-8b-live] #on-tap .tap__stairs > li > .tap__photo, [data-8b-live] #on-tap .tap__stairs > li > .m-text, [data-8b-live] #on-tap .tap__stairs > li > .tap__price { animation-timeline: --on-tap-t2; animation-range: cover calc(18.0328% + 16.3934% * var(--i) + 0.6885vh - 15.7377vh * var(--i)) cover calc(29.5082% + 16.3934% * var(--i) - 10.3279vh - 15.7377vh * var(--i)); }
+  [data-8b-live] #on-tap .tap__card--3 { animation-name: on-tap-li-tap-card-translate-3; animation-timing-function: var(--ease-power2-inout); }
+  [data-8b-live] #on-tap .tap__card--4 { animation-name: on-tap-li-tap-card-translate-4; animation-timing-function: var(--ease-power2-inout); }
+  [data-8b-live] #on-tap .tap__card--5 { animation-name: on-tap-li-tap-card-translate-5; animation-timing-function: var(--ease-power2-inout); }
+}
+@media (max-width: 899px) {
+  [data-8b-live] #on-tap .tap__stairs > li { view-timeline: --on-tap-item block; view-timeline-inset: 0; }
+  [data-8b-live] #on-tap .tap__stairs > li > .tap__fill { animation-timeline: --on-tap-item; animation-range: cover 8vh cover 50vh; }
+  [data-8b-live] #on-tap .tap__stairs > li > .m-text-4, [data-8b-live] #on-tap .tap__stairs > li > .tap__style, [data-8b-live] #on-tap .tap__stairs > li > .tap__photo, [data-8b-live] #on-tap .tap__stairs > li > .m-text, [data-8b-live] #on-tap .tap__stairs > li > .tap__price { animation-timeline: --on-tap-item; animation-range: cover 29vh cover 45.8vh; }
+}
+}
+</style>
+<style data-8b-part="scene:wheel">
+@layer scenes {
+@media (prefers-reduced-motion: no-preference) {
+  [data-8b-live] #brew-day { --bd-r: 1150px; --bd-step: 22deg; --bd-w: 360px; --bd-top: 36svh; height: calc(100svh + 4 * 80svh); padding: 0; }
+  [data-8b-live] #brew-day .bd__photo { width: min(180px, 22svh); height: min(180px, 22svh); }
+  [data-8b-live] #brew-day .bd__text { font-size: 16px; }
+  [data-8b-live] #brew-day .bd__stage { position: sticky; top: 0; height: 100svh; overflow: clip; padding-top: 92px; }
+  [data-8b-live] #brew-day .bd__title { width: min(780px, 88vw); margin: 0 auto; }
+  [data-8b-live] #brew-day .bd__rim { display: block; position: absolute; left: calc(50% - var(--bd-r)); top: var(--bd-top); width: calc(var(--bd-r) * 2); aspect-ratio: 1; border: 2px dashed color-mix(in srgb, var(--color-2) 40%, transparent); border-radius: 50%; }
+  [data-8b-live] #brew-day .bd__wheel { display: block; position: absolute; left: 50%; top: calc(var(--bd-top) + var(--bd-r)); width: 0; height: 0; max-width: none; margin: 0; }
+  [data-8b-live] #brew-day .bd__station { position: absolute; left: calc(var(--bd-w) / -2); top: calc(var(--bd-r) * -1 - 64px); width: var(--bd-w); transform-origin: 50% calc(var(--bd-r) + 64px); }
+  [data-8b-live] #brew-day .bd__num { background: var(--color-1); padding: 0 14px; line-height: 1; }
 }
 @media (prefers-reduced-motion: no-preference) and (max-width: 760px) {
-  #brew-day[data-wheel] { --bd-r: 600px; --bd-step: 48deg; --bd-w: 300px; --bd-top: 34svh; }
-  #brew-day[data-wheel] .bd__stage { padding-top: 84px; }
-  #brew-day[data-wheel] .bd__photo { width: min(160px, 19svh); height: min(160px, 19svh); }
+  [data-8b-live] #brew-day { --bd-r: 600px; --bd-step: 48deg; --bd-w: 300px; --bd-top: 34svh; }
+  [data-8b-live] #brew-day .bd__stage { padding-top: 84px; }
+  [data-8b-live] #brew-day .bd__photo { width: min(160px, 19svh); height: min(160px, 19svh); }
 }
 }
-</style>
-<style data-8b-part="scene-style:wave">
 @layer scenes {
-@media (prefers-reduced-motion: no-preference) {
-  #overheard .oh__row[data-looping] { padding: 0; overflow: clip; }
-  #overheard .oh__row[data-looping] .oh__track { display: flex; width: max-content; gap: 16px; animation: oh-roll 70s linear infinite; }
-  #overheard .oh__row[data-looping] .oh__quote { flex: none; width: 330px; }
-  #overheard .oh__row[data-looping][data-hover] .oh__track,
-  #overheard .oh__row[data-looping]:focus-within .oh__track,
-  #overheard .oh__row[data-paused] .oh__track { animation-play-state: paused; }
+[data-8b-live] #brew-day { --brew-day-ease: linear(0, 0, 0.00002, 0.00006, 0.00015, 0.00029, 0.0005, 0.00079, 0.00119, 0.00169, 0.00231, 0.00308, 0.004, 0.00509, 0.00635, 0.00781, 0.00948, 0.01137, 0.0135, 0.01588, 0.01852, 0.02144, 0.02465, 0.02816, 0.032, 0.03617, 0.04069, 0.04556, 0.05081, 0.05646, 0.0625, 0.06896, 0.07585, 0.08319, 0.09098, 0.09925, 0.108, 0.11725, 0.12702, 0.13731, 0.14815, 0.15954, 0.1715, 0.18404, 0.19719, 0.21094, 0.22531, 0.24033, 0.256, 0.27234, 0.28935, 0.30706, 0.32548, 0.34462, 0.3645, 0.38513, 0.40652, 0.42869, 0.45165, 0.47541, 0.5, 0.52459, 0.54835, 0.57131, 0.59348, 0.61487, 0.6355, 0.65538, 0.67452, 0.69294, 0.71065, 0.72766, 0.744, 0.75967, 0.77469, 0.78906, 0.80281, 0.81596, 0.8285, 0.84046, 0.85185, 0.86269, 0.87298, 0.88275, 0.892, 0.90075, 0.90902, 0.91681, 0.92415, 0.93104, 0.9375, 0.94354, 0.94919, 0.95444, 0.95931, 0.96383, 0.968, 0.97184, 0.97535, 0.97856, 0.98148, 0.98412, 0.9865, 0.98863, 0.99052, 0.99219, 0.99365, 0.99491, 0.996, 0.99692, 0.99769, 0.99831, 0.99881, 0.99921, 0.9995, 0.99971, 0.99985, 0.99994, 0.99998, 1, 1); }
+[data-8b-live] #brew-day { view-timeline: --brew-day-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #brew-day .bd__rim, [data-8b-live] #brew-day .bd__wheel > li { animation-timeline: --brew-day-t1; animation-range: cover calc(4.918% + 90.1639vh) cover calc(95.082% - 90.1639vh); animation-fill-mode: both; transform: none; }
+@keyframes brew-day-div-bd-rim-rotate-d { 0% { rotate: 0deg; } 18.1818% { rotate: -22deg; } 27.2727% { rotate: -22deg; } 45.4545% { rotate: -44deg; } 54.5455% { rotate: -44deg; } 72.7273% { rotate: -66deg; } 81.8182% { rotate: -66deg; } 100% { rotate: -88deg; } }
+@keyframes brew-day-div-bd-rim-rotate-m { 0% { rotate: 0deg; } 18.1818% { rotate: -48deg; } 27.2727% { rotate: -48deg; } 45.4545% { rotate: -96deg; } 54.5455% { rotate: -96deg; } 72.7273% { rotate: -144deg; } 81.8182% { rotate: -144deg; } 100% { rotate: -192deg; } }
+@keyframes brew-day-li-bd-station-rotate-2-d { 0% { rotate: 22deg; } 18.1818% { rotate: 0deg; } 27.2727% { rotate: 0deg; } 45.4545% { rotate: -22deg; } 54.5455% { rotate: -22deg; } 72.7273% { rotate: -44deg; } 81.8182% { rotate: -44deg; } 100% { rotate: -66deg; } }
+@keyframes brew-day-li-bd-station-rotate-2-m { 0% { rotate: 48deg; } 18.1818% { rotate: 0deg; } 27.2727% { rotate: 0deg; } 45.4545% { rotate: -48deg; } 54.5455% { rotate: -48deg; } 72.7273% { rotate: -96deg; } 81.8182% { rotate: -96deg; } 100% { rotate: -144deg; } }
+@keyframes brew-day-li-bd-station-rotate-3-d { 0% { rotate: 44deg; } 18.1818% { rotate: 22deg; } 27.2727% { rotate: 22deg; } 45.4545% { rotate: 0deg; } 54.5455% { rotate: 0deg; } 72.7273% { rotate: -22deg; } 81.8182% { rotate: -22deg; } 100% { rotate: -44deg; } }
+@keyframes brew-day-li-bd-station-rotate-3-m { 0% { rotate: 96deg; } 18.1818% { rotate: 48deg; } 27.2727% { rotate: 48deg; } 45.4545% { rotate: 0deg; } 54.5455% { rotate: 0deg; } 72.7273% { rotate: -48deg; } 81.8182% { rotate: -48deg; } 100% { rotate: -96deg; } }
+@keyframes brew-day-li-bd-station-rotate-4-d { 0% { rotate: 66deg; } 18.1818% { rotate: 44deg; } 27.2727% { rotate: 44deg; } 45.4545% { rotate: 22deg; } 54.5455% { rotate: 22deg; } 72.7273% { rotate: 0deg; } 81.8182% { rotate: 0deg; } 100% { rotate: -22deg; } }
+@keyframes brew-day-li-bd-station-rotate-4-m { 0% { rotate: 144deg; } 18.1818% { rotate: 96deg; } 27.2727% { rotate: 96deg; } 45.4545% { rotate: 48deg; } 54.5455% { rotate: 48deg; } 72.7273% { rotate: 0deg; } 81.8182% { rotate: 0deg; } 100% { rotate: -48deg; } }
+@keyframes brew-day-li-bd-station-rotate-5-d { 0% { rotate: 88deg; } 18.1818% { rotate: 66deg; } 27.2727% { rotate: 66deg; } 45.4545% { rotate: 44deg; } 54.5455% { rotate: 44deg; } 72.7273% { rotate: 22deg; } 81.8182% { rotate: 22deg; } 100% { rotate: 0deg; } }
+@keyframes brew-day-li-bd-station-rotate-5-m { 0% { rotate: 192deg; } 18.1818% { rotate: 144deg; } 27.2727% { rotate: 144deg; } 45.4545% { rotate: 96deg; } 54.5455% { rotate: 96deg; } 72.7273% { rotate: 48deg; } 81.8182% { rotate: 48deg; } 100% { rotate: 0deg; } }
+@media (min-width: 761px) {
+  [data-8b-live] #brew-day .bd__rim { animation-name: brew-day-div-bd-rim-rotate-d; animation-timing-function: var(--brew-day-ease); }
+  [data-8b-live] #brew-day .bd__wheel > li { animation-timing-function: var(--brew-day-ease); }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(1) { animation-name: brew-day-div-bd-rim-rotate-d; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(2) { animation-name: brew-day-li-bd-station-rotate-2-d; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(3) { animation-name: brew-day-li-bd-station-rotate-3-d; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(4) { animation-name: brew-day-li-bd-station-rotate-4-d; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(5) { animation-name: brew-day-li-bd-station-rotate-5-d; }
 }
-@keyframes oh-roll { to { transform: translateX(calc(-50% - 8px)); } }
+@media (max-width: 760px) {
+  [data-8b-live] #brew-day .bd__rim { animation-name: brew-day-div-bd-rim-rotate-m; animation-timing-function: var(--brew-day-ease); }
+  [data-8b-live] #brew-day .bd__wheel > li { animation-timing-function: var(--brew-day-ease); }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(1) { animation-name: brew-day-div-bd-rim-rotate-m; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(2) { animation-name: brew-day-li-bd-station-rotate-2-m; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(3) { animation-name: brew-day-li-bd-station-rotate-3-m; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(4) { animation-name: brew-day-li-bd-station-rotate-4-m; }
+  [data-8b-live] #brew-day .bd__wheel > li:nth-of-type(5) { animation-name: brew-day-li-bd-station-rotate-5-m; }
+}
 }
 </style>
+<style data-8b-part="scene:wave">
+@layer scenes {
+@property --overheard-p { syntax: '<number>'; inherits: true; initial-value: 0; }
+[data-8b-live] #overheard .oh__title { view-timeline: --overheard-title block; animation: overheard-wave linear both; animation-timeline: --overheard-title; animation-range: cover 0% cover 78vh; --overheard-amp: tan(atan2(min(4vw, 52px), 1px)); }
+[data-8b-live] #overheard .oh__title .c { display: inline-block; --overheard-a: calc(var(--overheard-amp) * pow(max(0, 1 - var(--overheard-p)), 1.3)); --overheard-ph: calc(var(--i) * 0.8 - var(--overheard-p) * 10); translate: 0 calc(var(--overheard-a) * sin(var(--overheard-ph)) * 1px); rotate: calc(var(--overheard-a) * cos(var(--overheard-ph)) * 0.16deg); }
+@keyframes overheard-wave { 0% { --overheard-p: 0; } 100% { --overheard-p: 1; } }
+[data-8b-live] #overheard .oh__row { padding: 0; overflow: clip; }
+[data-8b-live] #overheard .oh__track { display: flex; width: max-content; gap: 16px; animation: overheard-roll 70s linear infinite; }
+[data-8b-live] #overheard .oh__quote { flex: none; width: 330px; }
+[data-8b-live] #overheard .oh__row:focus-within .oh__track { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) {
+  [data-8b-live] #overheard .oh__row:hover .oh__track { animation-play-state: paused; }
+}
+@keyframes overheard-roll { 0% { translate: 0 0; } 100% { translate: calc(-50% - 8px) 0; } }
+}
+</style>
+<style data-8b-part="scene:deal">
+@layer scenes {
+[data-8b-live] #events .ev__list > li { z-index: calc(var(--n) - var(--i)); position: relative; }
+[data-8b-live] #events .ev__list { view-timeline: --events-t1 block; view-timeline-inset: 0; }
+[data-8b-live] #events .ev__list > li:is(:nth-of-type(2), :nth-of-type(3), :nth-of-type(4), :nth-of-type(5)) { animation-timeline: --events-t1; animation-timing-function: cubic-bezier(0.3333, 1, 0.6667, 1); animation-fill-mode: both; transform: none; }
+[data-8b-live] #events .ev__list > li:nth-of-type(2) { animation-range: cover 18vh cover calc(40% - 14vh); }
+[data-8b-live] #events .ev__list > li:nth-of-type(3) { animation-range: cover calc(20% + 2vh) cover calc(60% - 30vh); }
+[data-8b-live] #events .ev__list > li:nth-of-type(4) { animation-range: cover calc(40% - 14vh) cover calc(80% - 46vh); }
+[data-8b-live] #events .ev__list > li:nth-of-type(5) { animation-range: cover calc(60% - 30vh) cover calc(100% - 62vh); }
+@keyframes events-li-ev-row-translate { 0% { translate: 0px var(--events-y, 0px); } 100% { translate: 0px 0px; } }
+@keyframes events-li-ev-row-rotate { 0% { rotate: 2.4deg; } 100% { rotate: 0deg; } }
+@keyframes events-li-ev-row-rotate-2 { 0% { rotate: -1.8deg; } 100% { rotate: 0deg; } }
+[data-8b-live] #events .ev__list > li:nth-of-type(even) { animation-name: events-li-ev-row-translate, events-li-ev-row-rotate; }
+[data-8b-live] #events .ev__list > li:nth-of-type(odd):not(:first-of-type) { animation-name: events-li-ev-row-translate, events-li-ev-row-rotate-2; }
+}
+</style>
+<script data-8b-part="motion-gate">
+if (matchMedia('(prefers-reduced-motion: no-preference)').matches && CSS.supports('animation-timeline: view()')) document.documentElement.setAttribute('data-8b-live', '');
+</script>
 </head>
 <body>
 <!-- navigation: top bar: two-line wordmark, section links, Book a table button; phone menu overlay -->
@@ -901,7 +1078,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   </nav>
   <a class="m-btn nav__cta" href="#visit"><span class="m-btn__label">Book a table</span></a>
   <button class="m-btn nav__menu" type="button" aria-expanded="false" aria-controls="menu"><span class="m-btn__label">Menu</span></button>
-  <div class="menu" id="menu" data-lenis-prevent hidden>
+  <div class="menu" id="menu" hidden>
     <div class="menu__top">
       <span class="m-text-4">Loud Kettle</span>
       <button class="m-iconbtn menu__close" type="button" aria-label="Close the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
@@ -923,9 +1100,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 <section id="opening" data-8b-section="opening" aria-labelledby="opening-title">
   <div class="op__track" aria-hidden="true"><div class="op__backdrop">
     <div class="op__orbit">
-      <div class="op__sat"><img style="background:#f3f3f3" src="https://images.unsplash.com/photo-1604587430725-41e97544d100?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8aG9wcyUyMGNvbmVzfGVufDF8Mnx8fDE3OTEzOTgwNjZ8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=100&q=60" alt="" fetchpriority="low" width="4000" height="4000"></div>
-      <div class="op__sat"><img style="background:#a67340" src="https://images.unsplash.com/photo-1757670919588-1fe3b3df3dfa?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OXx8bWFsdCUyMGdyYWlucyUyMGJyZXdpbmd8ZW58MXwyfHx8MTc5MTM5ODA4N3ww&ixlib=rb-4.1.0&auto=format&fit=crop&w=100&q=60" alt="" fetchpriority="low" width="3000" height="3000"></div>
-      <div class="op__sat"><img style="background:#d9a640" src="https://images.unsplash.com/photo-1607007372717-d777f16ab987?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8Y2l0cnVzJTIwemVzdHxlbnwxfDJ8fHwxNzkxMzk4MDg4fDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=100&q=60" alt="" fetchpriority="low" width="2775" height="2775"></div>
+      <div class="op__sat"><img src="https://images.unsplash.com/photo-1604587430725-41e97544d100?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8aG9wcyUyMGNvbmVzfGVufDF8Mnx8fDE3OTEzOTgwNjZ8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=110&q=60" alt="" fetchpriority="low" width="4000" height="4000"></div>
+      <div class="op__sat"><img src="https://images.unsplash.com/photo-1757670919588-1fe3b3df3dfa?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OXx8bWFsdCUyMGdyYWlucyUyMGJyZXdpbmd8ZW58MXwyfHx8MTc5MTM5ODA4N3ww&ixlib=rb-4.1.0&auto=format&fit=crop&w=110&q=60" alt="" fetchpriority="low" width="3000" height="3000"></div>
+      <div class="op__sat"><img src="https://images.unsplash.com/photo-1607007372717-d777f16ab987?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8Y2l0cnVzJTIwemVzdHxlbnwxfDJ8fHwxNzkxMzk4MDg4fDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=110&q=60" alt="" fetchpriority="low" width="2775" height="2775"></div>
     </div>
     <div class="op__disc"><div class="op__disc-fill"></div></div>
   </div></div>
@@ -936,7 +1113,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
       <span class="op__line"><span class="m-text-2">louder.</span></span>
     </h1>
     <div class="op__stage">
-      <figure class="op__pint"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1601912414323-0debc2271e40?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OXx8bGFnZXIlMjBiZWVyJTIwZ2xhc3N8ZW58MXwxfHx8MTc5MTM5ODA3NHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=330&q=60" alt="A pint of amber beer on a dark bar" width="4000" height="5000" fetchpriority="high"></figure>
+      <figure class="op__pint"><img src="https://images.unsplash.com/photo-1601912414323-0debc2271e40?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OXx8bGFnZXIlMjBiZWVyJTIwZ2xhc3N8ZW58MXwxfHx8MTc5MTM5ODA3NHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=330&q=60" alt="A pint of amber beer on a dark bar" width="4000" height="5000" fetchpriority="high"></figure>
     </div>
     <div class="op__base">
       <p class="op__label op__label--l m-text-5">Now pouring · Tap 04</p>
@@ -948,33 +1125,33 @@ button, input, select, textarea { font: inherit; color: inherit; }
     </div>
   </div>
   <div class="op__screen op__screen--2">
-    <p class="op__manifesto m-text-6">We brew seven barrels at a time in an old tram shed, in a kettle that bangs like a drum kit <span class="op__chip"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1709010454595-1e8328c9f3c3?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8ZGFyayUyMGJlZXIlMjBwb3J0ZXJ8ZW58MXwxfHx8MTc5MTM5ODE3MHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=110&q=60" alt="" loading="lazy" width="2518" height="3777"></span> and we pour it forty feet from the tank <span class="op__chip"><img style="background:#262626" src="https://images.unsplash.com/photo-1766589220696-4c7d1654d476?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTB8fGJlZXIlMjB0YXAlMjBwb3VyaW5nfGVufDF8MXx8fDE3OTEzOTgwOTJ8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=110&q=60" alt="" loading="lazy" width="2000" height="2997"></span>. Grab a stool and act like you found us first.</p>
+    <p class="op__manifesto m-text-6">We brew seven barrels at a time in an old tram shed, in a kettle that bangs like a drum kit <span class="op__chip"><img src="https://images.unsplash.com/photo-1709010454595-1e8328c9f3c3?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MXx8ZGFyayUyMGJlZXIlMjBwb3J0ZXJ8ZW58MXwxfHx8MTc5MTM5ODE3MHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=1600&q=60" alt="" loading="lazy" width="2518" height="3777"></span> and we pour it forty feet from the tank <span class="op__chip"><img src="https://images.unsplash.com/photo-1766589220696-4c7d1654d476?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTB8fGJlZXIlMjB0YXAlMjBwb3VyaW5nfGVufDF8MXx8fDE3OTEzOTgwOTJ8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=1600&q=60" alt="" loading="lazy" width="2000" height="2997"></span>. Grab a stool and act like you found us first.</p>
     <p class="op__sign m-text-5">Loud Kettle Brewing Co. · Strip District, Pittsburgh · since 2019</p>
   </div>
 </section>
 <!-- no-shortcuts: column of four hanging tag-cards (principles or features) among floating round photos (animation: scene:tags-swing) -->
 <section id="no-shortcuts" data-8b-section="no-shortcuts" aria-labelledby="ns-title">
   <div class="ns__floats" aria-hidden="true">
-    <figure class="ns__float ns__float--1" data-far><img style="background:#c08c59" src="https://images.unsplash.com/photo-1562957806-6fd9fe82f9a0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8bWFsdCUyMGdyYWlucyUyMGJyZXdpbmd8ZW58MXwyfHx8MTc5MTM5ODA4N3ww&ixlib=rb-4.1.0&auto=format&fit=crop&w=250&q=60" width="3024" height="3024" alt="" loading="lazy"></figure>
-    <figure class="ns__float ns__float--2"><img style="background:#8ca640" src="https://images.unsplash.com/photo-1607007372648-4163d8a5204f?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8Y2l0cnVzJTIwemVzdHxlbnwxfDJ8fHwxNzkxMzk4MDg4fDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=190&q=60" width="2526" height="2526" alt="" loading="lazy"></figure>
-    <figure class="ns__float ns__float--3"><img style="background:#c0c073" src="https://images.unsplash.com/photo-1790434969679-c4c6879acb0c?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8YmFybGV5JTIwZ3JhaW58ZW58MXwyfHx8MTc5MTM5ODA2N3ww&ixlib=rb-4.1.0&auto=format&fit=crop&w=130&q=60" width="3456" height="3456" alt="" loading="lazy"></figure>
-    <figure class="ns__float ns__float--4" data-far><img style="background:#d98c0c" src="https://images.unsplash.com/photo-1708884867025-9a9b3ebb6b16?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OHx8Y2l0cnVzJTIwemVzdHxlbnwxfDJ8fHwxNzkxMzk4MDg4fDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=230&q=60" width="4200" height="4199" alt="" loading="lazy"></figure>
+    <figure class="ns__float ns__float--1" data-far><img src="https://images.unsplash.com/photo-1562957806-6fd9fe82f9a0?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8bWFsdCUyMGdyYWlucyUyMGJyZXdpbmd8ZW58MXwyfHx8MTc5MTM5ODA4N3ww&ixlib=rb-4.1.0&auto=format&fit=crop&w=250&q=60" width="3024" height="3024" alt="" loading="lazy"></figure>
+    <figure class="ns__float ns__float--2"><img src="https://images.unsplash.com/photo-1607007372648-4163d8a5204f?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8Y2l0cnVzJTIwemVzdHxlbnwxfDJ8fHwxNzkxMzk4MDg4fDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=190&q=60" width="2526" height="2526" alt="" loading="lazy"></figure>
+    <figure class="ns__float ns__float--3"><img src="https://images.unsplash.com/photo-1790434969679-c4c6879acb0c?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NXx8YmFybGV5JTIwZ3JhaW58ZW58MXwyfHx8MTc5MTM5ODA2N3ww&ixlib=rb-4.1.0&auto=format&fit=crop&w=130&q=60" width="3456" height="3456" alt="" loading="lazy"></figure>
+    <figure class="ns__float ns__float--4" data-far><img src="https://images.unsplash.com/photo-1708884867025-9a9b3ebb6b16?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OHx8Y2l0cnVzJTIwemVzdHxlbnwxfDJ8fHwxNzkxMzk4MDg4fDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=230&q=60" width="4200" height="4199" alt="" loading="lazy"></figure>
   </div>
   <h2 class="ns__title m-text-2" id="ns-title">Four things that never go in the kettle</h2>
-  <ul class="ns__list">
-    <li class="ns__card">
+  <ul class="ns__list" data-8b-items=":scope > li" data-8b-fixed="4">
+    <li class="ns__card" style="--no-shortcuts-li-ns-card-rotate-from: -22deg; --no-shortcuts-li-ns-card-rotate-to: -2deg; --no-shortcuts-li-ns-card-rotate-from-m: -13deg">
       <p class="m-tag">No syrup shortcuts</p>
       <div class="m-surface ns__body"><p class="m-text">Grain gets milled here at six in the morning and mashed by hand. The spent grain goes to a pig farm up the Allegheny, and the pigs have opinions.</p></div>
     </li>
-    <li class="ns__card">
+    <li class="ns__card" style="--no-shortcuts-li-ns-card-rotate-from: 23deg; --no-shortcuts-li-ns-card-rotate-to: 3deg; --no-shortcuts-li-ns-card-rotate-from-m: 14deg">
       <p class="m-tag">No rushed lagers</p>
       <div class="m-surface ns__body"><p class="m-text">Our lagers sit near freezing for six weeks. A bigger brewery would call that wasted tank space. We call it the reason they taste this clean.</p></div>
     </li>
-    <li class="ns__card">
+    <li class="ns__card" style="--no-shortcuts-li-ns-card-rotate-from: -23.5deg; --no-shortcuts-li-ns-card-rotate-to: -3.5deg; --no-shortcuts-li-ns-card-rotate-from-m: -14.5deg">
       <p class="m-tag">No stale hops</p>
       <div class="m-surface ns__body"><p class="m-text">Hops arrive vacuum-sealed and get used inside the month. Anything older goes home with the staff, who are not complaining.</p></div>
     </li>
-    <li class="ns__card">
+    <li class="ns__card" style="--no-shortcuts-li-ns-card-rotate-from: 22deg; --no-shortcuts-li-ns-card-rotate-to: 2deg; --no-shortcuts-li-ns-card-rotate-from-m: 13deg">
       <p class="m-tag">No filtered-to-death</p>
       <div class="m-surface ns__body"><p class="m-text">We filter enough to be bright, never enough to be boring. If it tastes like a press release, it doesn't leave the tank.</p></div>
     </li>
@@ -984,12 +1161,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 <!-- on-tap: giant outlined word over five product cards in a staircase, each in its own colour (demo: the beers on tap) (animation: scene:pour-steps) -->
 <section id="on-tap" data-8b-section="on-tap" aria-labelledby="tap-title">
   <h2 class="tap__title" id="tap-title"><span class="m-text-2 tap__small">What's</span> <span class="m-text-3 tap__big" style="--len:7">pouring</span></h2>
-  <ul class="tap__stairs">
+  <ul class="tap__stairs" data-8b-items=":scope > li" data-8b-fixed="5">
     <li class="tap__card tap__card--1">
       <div class="tap__fill" aria-hidden="true"></div>
       <h3 class="m-text-4 tap__name">Porch Crusher</h3>
       <p class="m-text-5 tap__style">Pale ale · 5.2%</p>
-      <img style="background:#260c0c" class="tap__photo" src="https://images.unsplash.com/photo-1664216604773-d29b6d64d1e4?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8aGF6eSUyMGlwYSUyMGdsYXNzfGVufDF8MXx8fDE3OTEzOTgwNjh8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="4000" height="6000" alt="A pint of golden pale ale on a dark bar" loading="lazy">
+      <img class="tap__photo" src="https://images.unsplash.com/photo-1664216604773-d29b6d64d1e4?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8aGF6eSUyMGlwYSUyMGdsYXNzfGVufDF8MXx8fDE3OTEzOTgwNjh8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="4000" height="6000" alt="A pint of golden pale ale on a dark bar" loading="lazy">
       <p class="m-text tap__note">Orange peel, cracker malt, gone before the brats come off the grill.</p>
       <p class="m-text-5 tap__price"><span>Pint $7</span><span>Half $4</span></p>
     </li>
@@ -997,7 +1174,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
       <div class="tap__fill" aria-hidden="true"></div>
       <h3 class="m-text-4 tap__name">Static Haze</h3>
       <p class="m-text-5 tap__style">Hazy IPA · 6.8%</p>
-      <img style="background:#262626" class="tap__photo" src="https://images.unsplash.com/photo-1644085159560-8b6745fc8b60?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OHx8c291ciUyMGJlZXIlMjBnbGFzc3xlbnwxfDF8fHwxNzkxMzk4MDcxfDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=210&q=60" width="4121" height="5511" alt="A tulip glass of cloudy hazy IPA with a thick head" loading="lazy">
+      <img class="tap__photo" src="https://images.unsplash.com/photo-1644085159560-8b6745fc8b60?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OHx8c291ciUyMGJlZXIlMjBnbGFzc3xlbnwxfDF8fHwxNzkxMzk4MDcxfDA&ixlib=rb-4.1.0&auto=format&fit=crop&w=210&q=60" width="4121" height="5511" alt="A tulip glass of cloudy hazy IPA with a thick head" loading="lazy">
       <p class="m-text tap__note">Soft as a pillow, loud as the jukebox. Mango, pine and a little feedback.</p>
       <p class="m-text-5 tap__price"><span>Pint $8</span><span>Half $5</span></p>
     </li>
@@ -1005,7 +1182,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
       <div class="tap__fill" aria-hidden="true"></div>
       <h3 class="m-text-4 tap__name">Red Siren</h3>
       <p class="m-text-5 tap__style">Irish red · 5.6%</p>
-      <img style="background:#735940" class="tap__photo" src="https://images.unsplash.com/photo-1597930715511-bc6248bba27b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTF8fHNvdXIlMjBiZWVyJTIwZ2xhc3N8ZW58MXwxfHx8MTc5MTM5ODA3MXww&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="4972" height="7458" alt="A ruby-red ale in a tulip glass on a bar" loading="lazy">
+      <img class="tap__photo" src="https://images.unsplash.com/photo-1597930715511-bc6248bba27b?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTF8fHNvdXIlMjBiZWVyJTIwZ2xhc3N8ZW58MXwxfHx8MTc5MTM5ODA3MXww&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="4972" height="7458" alt="A ruby-red ale in a tulip glass on a bar" loading="lazy">
       <p class="m-text tap__note">Toffee, toast and a dry finish that calls you back for one more.</p>
       <p class="m-text-5 tap__price"><span>Pint $7</span><span>Half $4</span></p>
     </li>
@@ -1013,7 +1190,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
       <div class="tap__fill" aria-hidden="true"></div>
       <h3 class="m-text-4 tap__name">Peach Feedback</h3>
       <p class="m-text-5 tap__style">Peach sour · 4.9%</p>
-      <img style="background:#0c2626" class="tap__photo" src="https://images.unsplash.com/photo-1592149598903-67e5ee96fe97?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTB8fHNvdXIlMjBiZWVyJTIwZ2xhc3N8ZW58MXwxfHx8MTc5MTM5ODA3MXww&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="4160" height="6240" alt="A hand holding a glass of golden peach sour against warm lights" loading="lazy">
+      <img class="tap__photo" src="https://images.unsplash.com/photo-1592149598903-67e5ee96fe97?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTB8fHNvdXIlMjBiZWVyJTIwZ2xhc3N8ZW58MXwxfHx8MTc5MTM5ODA3MXww&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="4160" height="6240" alt="A hand holding a glass of golden peach sour against warm lights" loading="lazy">
       <p class="m-text tap__note">Two hundred pounds of Georgia peaches per batch. Tart, juicy, slightly unhinged.</p>
       <p class="m-text-5 tap__price"><span>Pint $8</span><span>Half $5</span></p>
     </li>
@@ -1021,7 +1198,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
       <div class="tap__fill" aria-hidden="true"></div>
       <h3 class="m-text-4 tap__name">Night Shift</h3>
       <p class="m-text-5 tap__style">Oatmeal stout · 7.4%</p>
-      <img style="background:#a67340" class="tap__photo" src="https://images.unsplash.com/photo-1695605302563-d3d640811f7a?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OXx8ZGFyayUyMGJlZXIlMjBwb3J0ZXJ8ZW58MXwxfHx8MTc5MTM5ODE3MHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="3151" height="4726" alt="A dark stout in a stemmed glass on a wooden bar" loading="lazy">
+      <img class="tap__photo" src="https://images.unsplash.com/photo-1695605302563-d3d640811f7a?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OXx8ZGFyayUyMGJlZXIlMjBwb3J0ZXJ8ZW58MXwxfHx8MTc5MTM5ODE3MHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=200&q=60" width="3151" height="4726" alt="A dark stout in a stemmed glass on a wooden bar" loading="lazy">
       <p class="m-text tap__note">Cold brew, cocoa nibs, oats. Poured on nitro, best after dark.</p>
       <p class="m-text-5 tap__price"><span>Pint $8</span><span>Half $5</span></p>
     </li>
@@ -1031,9 +1208,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 <!-- flights: interactive picker: choose four items into round slots, then save (demo: a beer flight) -->
 <section id="flights" data-8b-section="flights" aria-labelledby="fl-title">
   <div class="fl__intro">
-    <h2 class="fl__title" id="fl-title" data-8b-motion="rise"><span class="m-text-2">Build a flight</span> <span class="m-text-3">of four.</span> <span class="m-text-2">$14</span></h2>
+    <h2 class="fl__title" id="fl-title" data-8b-motion="rise" data-8b-split="lines"><span class="m-text-2">Build </span><span class="m-text-2">a </span><span class="m-text-2">flight</span> <span class="m-text-3">of </span><span class="m-text-3">four.</span> <span class="m-text-2">$14</span></h2>
     <p class="m-text fl__lede">Four five-ounce pours, your pick of whatever's on. Tap a beer to drop it in the next empty slot, tap a slot to send it back, then show the bar.</p>
-    <ul class="fl__chips">
+    <ul class="fl__chips" data-8b-items=":scope > li">
       <li><button class="fl__chip" type="button" style="--fl-c: var(--color-5)"><span class="fl__swatch" aria-hidden="true"></span><span class="m-text-4 fl__name">Porch Crusher</span><span class="m-text-5 fl__meta">Pale ale · 5.2%</span></button></li>
       <li><button class="fl__chip" type="button" style="--fl-c: var(--color-4)"><span class="fl__swatch" aria-hidden="true"></span><span class="m-text-4 fl__name">Static Haze</span><span class="m-text-5 fl__meta">Hazy IPA · 6.8%</span></button></li>
       <li><button class="fl__chip" type="button" style="--fl-c: var(--color-6)"><span class="fl__swatch" aria-hidden="true"></span><span class="m-text-4 fl__name">Red Siren</span><span class="m-text-5 fl__meta">Irish red · 5.6%</span></button></li>
@@ -1065,36 +1242,36 @@ button, input, select, textarea { font: inherit; color: inherit; }
       <svg class="bd__arc" viewBox="0 0 1000 200" aria-hidden="true"><path id="bd-arc-path" d="M 30 196 Q 500 -40 970 196" fill="none"/><text class="m-text-2"><textPath href="#bd-arc-path" startOffset="50%" text-anchor="middle">From grain to glass</textPath></text></svg>
     </h2>
     <div class="bd__rim" aria-hidden="true"></div>
-    <ol class="bd__wheel">
+    <ol class="bd__wheel" data-8b-items=":scope > li" data-8b-fixed="5">
       <li class="bd__station">
         <p class="m-text-3 bd__num" aria-hidden="true">01</p>
         <h3 class="m-tag bd__tag">Mill and mash</h3>
         <p class="m-text bd__text">Four hundred pounds of grain cracked at 6 am and stirred into hot water by someone holding a paddle and a coffee.</p>
-        <img style="background:#260c0c" class="bd__photo" src="https://images.unsplash.com/photo-1694724966656-8b8c018090dc?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTB8fGJyZXdlcnklMjBtYXNoJTIwdHVufGVufDF8MHx8fDE3OTEzOTgwODl8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=320&q=60" width="4896" height="3264" alt="Crushed grain soaking in an open wooden mash vessel" loading="lazy">
+        <img class="bd__photo" src="https://images.unsplash.com/photo-1694724966656-8b8c018090dc?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTB8fGJyZXdlcnklMjBtYXNoJTIwdHVufGVufDF8MHx8fDE3OTEzOTgwODl8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=320&q=60" width="4896" height="3264" alt="Crushed grain soaking in an open wooden mash vessel" loading="lazy">
       </li>
       <li class="bd__station">
         <p class="m-text-3 bd__num" aria-hidden="true">02</p>
         <h3 class="m-tag bd__tag">The loud boil</h3>
         <p class="m-text bd__text">Ninety minutes at a rolling boil. The kettle rattles its lid, hops go in three times, and the street smells like toast and pine.</p>
-        <img style="background:#f3f3f3" class="bd__photo" src="https://images.unsplash.com/photo-1573730037815-baace9b29fce?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8YnJld2luZyUyMGtldHRsZSUyMHN0ZWFtfGVufDF8MXx8fDE3OTEzOTgwOTB8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=220&q=60" width="3024" height="4032" alt="Copper brewing kettles in a brewhouse" loading="lazy">
+        <img class="bd__photo" src="https://images.unsplash.com/photo-1573730037815-baace9b29fce?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Nnx8YnJld2luZyUyMGtldHRsZSUyMHN0ZWFtfGVufDF8MXx8fDE3OTEzOTgwOTB8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=300&q=60" width="3024" height="4032" alt="Copper brewing kettles in a brewhouse" loading="lazy">
       </li>
       <li class="bd__station">
         <p class="m-text-3 bd__num" aria-hidden="true">03</p>
         <h3 class="m-tag bd__tag">Slow ferment</h3>
         <p class="m-text bd__text">Yeast does the real work for two weeks in steel tanks named after retired tram drivers. We check the temperature and say thanks.</p>
-        <img style="background:#404040" class="bd__photo" src="https://images.unsplash.com/photo-1532634786-c8f8c46a0062?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8YnJld2VyeSUyMG1hc2glMjB0dW58ZW58MXwwfHx8MTc5MTM5ODA4OXww&ixlib=rb-4.1.0&auto=format&fit=crop&w=320&q=60" width="7952" height="5304" alt="Stainless steel fermentation tanks in a row" loading="lazy">
+        <img class="bd__photo" src="https://images.unsplash.com/photo-1532634786-c8f8c46a0062?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8NHx8YnJld2VyeSUyMG1hc2glMjB0dW58ZW58MXwwfHx8MTc5MTM5ODA4OXww&ixlib=rb-4.1.0&auto=format&fit=crop&w=350&q=60" width="7952" height="5304" alt="Stainless steel fermentation tanks in a row" loading="lazy">
       </li>
       <li class="bd__station">
         <p class="m-text-3 bd__num" aria-hidden="true">04</p>
         <h3 class="m-tag bd__tag">Cold rest</h3>
         <p class="m-text bd__text">Everything rests cold until it's bright and calm. Lagers get six weeks of it; the hazy stuff gets three days and a pep talk.</p>
-        <img style="background:#26260c" class="bd__photo" src="https://images.unsplash.com/photo-1695369211855-b45c6f903d96?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTF8fGJyZXdlcnklMjBtYXNoJTIwdHVufGVufDF8MHx8fDE3OTEzOTgwODl8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=290&q=60" width="3957" height="2968" alt="A brewery cellar filled with conditioning tanks" loading="lazy">
+        <img class="bd__photo" src="https://images.unsplash.com/photo-1695369211855-b45c6f903d96?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8MTF8fGJyZXdlcnklMjBtYXNoJTIwdHVufGVufDF8MHx8fDE3OTEzOTgwODl8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=400&q=60" width="3957" height="2968" alt="A brewery cellar filled with conditioning tanks" loading="lazy">
       </li>
       <li class="bd__station">
         <p class="m-text-3 bd__num" aria-hidden="true">05</p>
         <h3 class="m-tag bd__tag">Tank to tap</h3>
         <p class="m-text bd__text">Bright tanks feed the taps through forty feet of chilled line. Nothing is bottled, trucked or warmed up before it hits your glass.</p>
-        <img style="background:#d9d9d9" class="bd__photo" src="https://images.unsplash.com/photo-1744481417845-a1576455b5a4?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8YmVlciUyMHRhcCUyMHBvdXJpbmd8ZW58MXwxfHx8MTc5MTM5ODA5Mnww&ixlib=rb-4.1.0&auto=format&fit=crop&w=220&q=60" width="5464" height="8192" alt="A bartender pouring beer from a tap into a glass" loading="lazy">
+        <img class="bd__photo" src="https://images.unsplash.com/photo-1744481417845-a1576455b5a4?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8Mnx8YmVlciUyMHRhcCUyMHBvdXJpbmd8ZW58MXwxfHx8MTc5MTM5ODA5Mnww&ixlib=rb-4.1.0&auto=format&fit=crop&w=260&q=60" width="5464" height="8192" alt="A bartender pouring beer from a tap into a glass" loading="lazy">
       </li>
     </ol>
   </div>
@@ -1103,14 +1280,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
 <!-- taproom: the venue: heading, lead, one wide and two small photos, three fact cards (demo: hours, dogs, food truck) -->
 <section id="taproom" data-8b-section="taproom" aria-labelledby="tr-title">
   <div class="tr__head">
-    <h2 class="m-text-2 tr__title" id="tr-title" data-8b-motion="rise">The tram shed</h2>
+    <h2 class="m-text-2 tr__title" id="tr-title" data-8b-motion="rise" data-8b-split="lines">The tram shed</h2>
     <p class="m-text-6 tr__lede">Forty feet of bar, sixteen taps and long tables built from the depot's old floorboards. Bring friends, bring the dog, bring an appetite for whatever truck parked outside tonight.</p>
   </div>
   <div class="tr__photos">
-    <figure class="tr__main"><img style="background:#40260c" src="https://images.unsplash.com/photo-1720694924759-2a2daaa98987?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8dGFwcm9vbSUyMGJhciUyMGludGVyaW9yfGVufDF8MHx8fDE3OTEzOTgwOTN8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=1340&q=60" width="8039" height="5359" alt="A long wooden bar with stools under warm pendant lights" loading="lazy"></figure>
-    <figure class="tr__side tr__side--1"><img style="background:#262626" src="https://images.unsplash.com/photo-1569937755861-22f34e3ce88f?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OHx8YnJld2VyeSUyMHRhcHJvb20lMjBwZW9wbGV8ZW58MXwwfHx8MTc5MTM5ODA5NHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=660&q=60" width="6720" height="4480" alt="Friends laughing over pints at a taproom table" loading="lazy"></figure>
-    <figure class="tr__side tr__side--2"><img style="background:#260c0c" src="https://images.unsplash.com/photo-1649798510566-4a52cd4fe463?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8YnJld2VyeSUyMHRhcHJvb20lMjBwZW9wbGV8ZW58MXwwfHx8MTc5MTM5ODA5NHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=660&q=60" width="6720" height="4480" alt="A tasting flight on a wooden table between friends" loading="lazy"></figure>
-    <ul class="tr__facts">
+    <figure class="tr__main"><img src="https://images.unsplash.com/photo-1720694924759-2a2daaa98987?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8dGFwcm9vbSUyMGJhciUyMGludGVyaW9yfGVufDF8MHx8fDE3OTEzOTgwOTN8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=1340&q=60" width="8039" height="5359" alt="A long wooden bar with stools under warm pendant lights" loading="lazy"></figure>
+    <figure class="tr__side tr__side--1"><img src="https://images.unsplash.com/photo-1569937755861-22f34e3ce88f?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8OHx8YnJld2VyeSUyMHRhcHJvb20lMjBwZW9wbGV8ZW58MXwwfHx8MTc5MTM5ODA5NHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=660&q=60" width="6720" height="4480" alt="Friends laughing over pints at a taproom table" loading="lazy"></figure>
+    <figure class="tr__side tr__side--2"><img src="https://images.unsplash.com/photo-1649798510566-4a52cd4fe463?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8YnJld2VyeSUyMHRhcHJvb20lMjBwZW9wbGV8ZW58MXwwfHx8MTc5MTM5ODA5NHww&ixlib=rb-4.1.0&auto=format&fit=crop&w=660&q=60" width="6720" height="4480" alt="A tasting flight on a wooden table between friends" loading="lazy"></figure>
+    <ul class="tr__facts" data-8b-items=":scope > li">
       <li class="tr__fact" data-8b-motion="hang">
         <p class="m-tag">Open seven days</p>
         <div class="m-surface tr__body"><p class="m-text">From 3 pm on weekdays and noon at weekends. Last call is called loudly, so nobody misses it.</p></div>
@@ -1129,10 +1306,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 <!-- overheard: testimonials: giant outlined word and a slow scrolling row of six quotes on tag-cards (animation: scene:wave) -->
 <section id="overheard" data-8b-section="overheard" aria-labelledby="oh-title">
-  <h2 class="m-text-3 oh__title" id="oh-title" style="--len:9">Overheard</h2>
+  <h2 class="m-text-3 oh__title" id="oh-title" style="--len:9" data-8b-split="chars">Overheard</h2>
   <p class="m-text-6 oh__lede">Things said at the bar, written down by the bartenders, printed here with permission and a free pint.</p>
   <div class="oh__row">
-    <ul class="oh__track">
+    <ul class="oh__track" data-8b-items=":scope > li">
       <li class="oh__quote"><p class="m-tag">Dana, Thursdays</p><blockquote class="m-surface oh__body"><p class="m-text">“I came in for one Static Haze. That was in March.”</p></blockquote></li>
       <li class="oh__quote"><p class="m-tag">Marcus, table six</p><blockquote class="m-surface oh__body"><p class="m-text">“The stout tastes like the best breakfast I've never had. Is it too early? It's 4 pm. Fine.”</p></blockquote></li>
       <li class="oh__quote"><p class="m-tag">Priya, first visit</p><blockquote class="m-surface oh__body"><p class="m-text">“My dog got a biscuit before I got a menu, and honestly that's the right order.”</p></blockquote></li>
@@ -1145,8 +1322,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 <!-- faq: questions and answers (native <details>), sticky heading on desktop -->
 <section id="faq" data-8b-section="faq" aria-labelledby="faq-title">
-  <h2 class="m-text-2 faq__title" id="faq-title" data-8b-motion="rise">Ask the bar</h2>
-  <div class="faq__list">
+  <h2 class="m-text-2 faq__title" id="faq-title" data-8b-motion="rise" data-8b-split="lines">Ask the bar</h2>
+  <div class="faq__list" data-8b-items=":scope > details">
     <details class="faq__item">
       <summary class="faq__q"><span class="m-text-4">Can I bring my dog?</span><span class="faq__icon" aria-hidden="true"></span></summary>
       <p class="m-text faq__a">Yes, inside and on the patio, as long as they're leashed and friendly. Water bowls are by the door and the biscuits live behind the bar.</p>
@@ -1177,7 +1354,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 <!-- events: list of dated events as ticket rows: date stub, title, text, price and time (animation: scene:deal) -->
 <section id="events" data-8b-section="events" aria-labelledby="ev-title">
   <h2 class="ev__title" id="ev-title"><span class="m-text-2">Loud</span> <span class="m-text-3">nights</span></h2>
-  <ol class="ev__list">
+  <ol class="ev__list" data-8b-items=":scope > li" data-8b-fixed="5">
     <li class="ev__row m-surface">
       <p class="ev__date"><span class="m-text-4 ev__day">Thu 15</span><span class="m-text-5">October</span></p>
       <div class="ev__main"><h3 class="m-text-4">Quiz night, but loud</h3><p class="m-text">Teams of six, eight rounds, one round entirely about Pittsburgh bridges. The winners drink free for the night.</p></div>
@@ -1208,10 +1385,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 <!-- visit: contact: photo of the venue, address, hours, phone and email cards, and a booking request form (placeholders) -->
 <section id="visit" data-8b-section="visit" aria-labelledby="vi-title">
-  <h2 class="vi__title" id="vi-title" data-8b-motion="rise"><span class="m-text-3">Come</span> <span class="m-text-2">thirsty</span></h2>
+  <h2 class="vi__title" id="vi-title" data-8b-motion="rise" data-8b-split="lines"><span class="m-text-3">Come</span> <span class="m-text-2">thirsty</span></h2>
   <div class="vi__grid">
-    <figure class="vi__photo"><img style="background:#262626" src="https://images.unsplash.com/photo-1677156403423-da8e142d80ee?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8YnJpY2slMjB3YXJlaG91c2UlMjBleHRlcmlvciUyMG5pZ2h0fGVufDF8MHx8fDE3OTEzOTgwOTV8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=970&q=60" width="5184" height="3888" alt="An old brick depot building with wall lamps lit at night" loading="lazy"></figure>
-    <ul class="vi__facts">
+    <figure class="vi__photo"><img src="https://images.unsplash.com/photo-1677156403423-da8e142d80ee?ixid=M3w0Mzc5fDB8MXxzZWFyY2h8M3x8YnJpY2slMjB3YXJlaG91c2UlMjBleHRlcmlvciUyMG5pZ2h0fGVufDF8MHx8fDE3OTEzOTgwOTV8MA&ixlib=rb-4.1.0&auto=format&fit=crop&w=970&q=60" width="5184" height="3888" alt="An old brick depot building with wall lamps lit at night" loading="lazy"></figure>
+    <ul class="vi__facts" data-8b-items=":scope > li">
       <li class="vi__fact" data-8b-motion="hang">
         <p class="m-tag">Find us</p>
         <div class="m-surface vi__body">
@@ -1297,115 +1474,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js"></script>
-<script data-8b-part="motion-queue">
-(() => {
-  'use strict';
-  const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
-  const parsed = document.readyState === 'loading' ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true })) : Promise.resolve();
-  const ready = () => Promise.all([fonts, parsed]).then(() => firsts);
-  const nextTask = () => window.scheduler?.yield?.() ?? new Promise(resolve => setTimeout(resolve));
-  const refresh = () => {
-    if (typeof window.refreshScroll === 'function') return window.refreshScroll();
-    window.ScrollTrigger?.sort(); window.ScrollTrigger?.refresh();
-  };
-  const run = (setup, name) => {
-    for (const trigger of window.ScrollTrigger?.getAll() || []) if (!trigger.end && window.ScrollTrigger.getAll().includes(trigger)) trigger.refresh(0, 1);
-    const context = window.gsap.context(() => {});
-    const log = new MutationObserver(() => {});
-    log.observe(document.documentElement, { attributes: true, attributeOldValue: true, subtree: true });
-    let failure = null, records;
-    try { context.add(() => { try { setup(); } catch (error) { failure = error; } }); }
-    finally { records = log.takeRecords(); log.disconnect(); }
-    if (!failure) return true;
-    try { context.revert(); } catch (error) { console.error(name, 'revert failed', error); }
-    for (const { target, attributeName, oldValue } of records.reverse()) {
-      const now = target.getAttribute(attributeName);
-      if (oldValue == null) { if (now != null) target.removeAttribute(attributeName); }
-      else if (now !== oldValue) target.setAttribute(attributeName, oldValue);
-    }
-    console.error(name, failure);
-    return false;
-  };
-  let firsts = Promise.resolve(), tail = null, pending = 0, lazy = null, building = 0, firstCount = 0;
-  window.motionReady = ready();
-  parsed.then(() => { if (firstCount && !tail) firsts.then(refresh); });
-  window.queueMotion = (setup, { first = false, near, id } = {}) => {
-    if (!window.gsap || typeof setup !== 'function') return;
-    const name = id || document.currentScript?.getAttribute('data-8b-part') || 'motion';
-    if (near instanceof Element && window.IntersectionObserver) {
-      const watch = new IntersectionObserver(entries => {
-        if (!entries.some(entry => entry.isIntersecting)) return;
-        watch.disconnect();
-        building++;
-        lazy = (lazy || ready()).then(nextTask).then(() => run(setup, name)).finally(() => { if (!--building) refresh(); });
-      }, { rootMargin: '100% 0px' });
-      watch.observe(near);
-      return;
-    }
-    if (first) { firstCount++; firsts = firsts.then(() => fonts).then(() => { if (!run(setup, name)) refresh(); }); }
-    else {
-      pending++;
-      tail = (tail || ready()).then(nextTask).then(() => run(setup, name))
-        .finally(() => { if (!--pending) refresh(); });
-    }
-    window.motionReady = Promise.all([firsts, tail]);
-  };
-})();
-</script>
-<script data-8b-part="page-init">
-gsap.registerPlugin(ScrollTrigger, SplitText);
-function navOffset() {
-  const nav = document.getElementById('nav');
-  return nav ? nav.getBoundingClientRect().height : 0;
-}
-function refreshScroll() {
-  ScrollTrigger.sort();
-  ScrollTrigger.refresh();
-}
-gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-  const lenis = window.lenis = new Lenis({ lerp: .085, wheelMultiplier: .95, anchors: { offset: -8 } });
-  const tick = time => lenis.raf(time * 1000);
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(tick);
-  gsap.ticker.lagSmoothing(0);
-  return () => { gsap.ticker.remove(tick); gsap.ticker.lagSmoothing(500, 33); lenis.destroy(); window.lenis = null; };
-});
-</script>
-<script data-8b-part="motion">
-const effects = {
-  rise(element, vars = {}) {
-    const split = SplitText.create(element, { type: 'lines', linesClass: 'fx-line' });
-    return gsap.timeline({ ...vars, onComplete() { split.revert(); } })
-      .from(split.lines, { yPercent: 70, opacity: 0, duration: .8, stagger: .09, ease: 'power3.out' });
-  },
-  hang(element, vars = {}) {
-    const side = element.matches(':nth-child(even)') ? 1 : -1;
-    const angle = innerWidth < 760 ? 6 : 13;
-    return gsap.timeline(vars)
-      .fromTo(element, { rotation: angle * side, y: -26, transformOrigin: '50% 0%' }, { rotation: 0, y: 0, duration: 1.5, ease: 'elastic.out(1, .42)', clearProps: 'transformOrigin' });
-  },
-  pour(element, vars = {}) {
-    return gsap.fromTo(element, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power1.inOut', ...vars });
-  }
-};
-document.querySelectorAll('[data-8b-section]').forEach(section => {
-  ['rise', 'hang'].forEach(name => {
-    const elements = section.querySelectorAll(`[data-8b-motion~="${name}"]`);
-    if (!elements.length) return;
-    const id = `effect:${name}:${section.id}`;
-    queueMotion(() => gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-      elements.forEach((element, i) => {
-        const animation = effects[name](element, { paused: true, delay: name === 'hang' ? i * .12 : 0 });
-        ScrollTrigger.create({ id: `${id}:${i}`, trigger: element, start: 'top 88%', once: true, onEnter: () => animation.play() });
-      });
-    }), section.getBoundingClientRect().top < innerHeight ? { first: true, id } : { near: section, id });
-  });
-});
-</script>
 <script data-8b-part="section-script:nav">
 (() => {
   const nav = document.getElementById('nav');
@@ -1428,12 +1496,12 @@ document.querySelectorAll('[data-8b-section]').forEach(section => {
   const setMenu = open => {
     menu.hidden = !open;
     openButton.setAttribute('aria-expanded', String(open));
-    if (open) { window.lenis?.stop(); closeButton.focus(); }
-    else { window.lenis?.start(); openButton.focus(); }
+    if (open) { window.motionKit?.wheel?.stop(); closeButton.focus(); }
+    else { window.motionKit?.wheel?.start(); openButton.focus(); }
   };
   openButton.addEventListener('click', () => setMenu(true));
   closeButton.addEventListener('click', () => setMenu(false));
-  menu.addEventListener('click', event => { if (event.target.closest('a')) { menu.hidden = true; openButton.setAttribute('aria-expanded', 'false'); window.lenis?.start(); } });
+  menu.addEventListener('click', event => { if (event.target.closest('a')) { menu.hidden = true; openButton.setAttribute('aria-expanded', 'false'); window.motionKit?.wheel?.start(); } });
   addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) setMenu(false); });
 })();
 </script>
@@ -1443,49 +1511,6 @@ document.querySelectorAll('[data-8b-section]').forEach(section => {
   const screen = opening.querySelector('.op__screen--1');
   new IntersectionObserver(([entry]) => opening.toggleAttribute('data-loops-paused', !entry.isIntersecting)).observe(screen);
 })();
-</script>
-<style data-8b-part="scene-style:opening">
-@layer scenes {
-@media (prefers-reduced-motion: no-preference) {
-  #opening[data-flood] .op__screen--2 { background: transparent; }
-}
-}
-</style>
-<script data-8b-part="scene:opening">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('opening');
-    const backdrop = section.querySelector('.op__backdrop');
-    const disc = section.querySelector('.op__disc');
-    const orbit = section.querySelector('.op__orbit');
-    const title = section.querySelector('.op__title');
-    const base = section.querySelector('.op__base');
-    const pint = section.querySelector('.op__pint');
-    const chips = section.querySelectorAll('.op__chip');
-    const ink = getComputedStyle(document.documentElement).getPropertyValue('--color-1').trim();
-    section.setAttribute('data-flood', '');
-    const cover = () => {
-      const box = backdrop.getBoundingClientRect();
-      const d = disc.getBoundingClientRect();
-      const cx = d.left + d.width / 2 - box.left, cy = d.top + d.height / 2 - box.top;
-      const far = Math.hypot(Math.max(cx, box.width - cx), Math.max(cy, box.height - cy));
-      return (far + 8) / (d.width / 2);
-    };
-    const timeline = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: { id: 'opening', trigger: section, start: 'top top', end: 'bottom bottom', scrub: .4, invalidateOnRefresh: true }
-    });
-    timeline
-      .fromTo(disc, { scale: 1 }, { scale: cover, duration: 1, ease: 'power2.out' }, 0)
-      .fromTo(orbit, { scale: 1, rotate: 0 }, { scale: 1.7, rotate: -30, duration: .5, ease: 'power1.in' }, 0)
-      .to(title, { color: ink, duration: .16 }, .05)
-      .to(base, { color: ink, duration: .1 }, .02)
-      .fromTo(pint, { y: 0, rotate: 0, scale: 1 }, { y: () => -innerHeight * .35, rotate: -12, scale: .82, duration: .7, ease: 'power1.in' }, 0)
-      .fromTo(chips[0], { scale: 0, rotate: -20 }, { scale: 1, rotate: 0, duration: .18, ease: 'back.out(2)' }, .42)
-      .fromTo(chips[1], { scale: 0, rotate: 20 }, { scale: 1, rotate: 0, duration: .18, ease: 'back.out(2)' }, .52);
-    return () => section.removeAttribute('data-flood');
-  });
-}, { first: true });
 </script>
 <script data-8b-part="section-script:flights">
 (() => {
@@ -1554,135 +1579,226 @@ queueMotion(() => {
   });
 })();
 </script>
-<script data-8b-part="scene:tags-swing">
-queueMotion(() => {
-  gsap.matchMedia().add({ wide: '(min-width: 761px) and (prefers-reduced-motion: no-preference)', narrow: '(max-width: 760px) and (prefers-reduced-motion: no-preference)' }, context => {
-    const section = document.getElementById('no-shortcuts');
-    const cards = [...section.querySelectorAll('.ns__card')];
-    const floats = [...section.querySelectorAll('.ns__float')];
-    const swing = context.conditions.wide ? 20 : 11;
-    const timeline = gsap.timeline({ scrollTrigger: { id: 'tags-swing', trigger: section.querySelector('.ns__list'), start: 'top 88%', end: 'bottom 60%', scrub: .7 } });
-    cards.forEach((card, i) => {
-      const rest = parseFloat(getComputedStyle(card).rotate) || 0;
-      timeline.fromTo(card, { rotation: rest + (i % 2 ? swing : -swing), y: -70 - i * 36 }, { rotation: rest, y: 0, duration: 1, ease: 'back.out(2.4)' }, i * .42);
-    });
-    const drift = gsap.timeline({ scrollTrigger: { id: 'tags-swing:floats', trigger: section, start: 'top bottom', end: 'top 15%', scrub: .4 } });
-    floats.forEach(float => {
-      drift.fromTo(float, { y: float.hasAttribute('data-far') ? 160 : 380 }, { y: 0, ease: 'power1.out', duration: 1 }, 0);
-    });
+<script data-8b-part="motion-kit">
+(() => {
+const live = document.documentElement.hasAttribute('data-8b-live');
+const measures = new Set();
+let queued = false;
+const run = fn => { try { fn(); } catch (error) { console.error('[motion-kit] measure failed', error); } };
+const remeasure = () => {
+if (queued) return;
+queued = true;
+requestAnimationFrame(() => { queued = false; measures.forEach(run); realign(); });
+};
+const realign = () => document.getAnimations().forEach(animation => {
+if (animation.timeline && animation.timeline !== document.timeline && animation.playState === 'running') { animation.pause(); animation.play(); }
+});
+window.motionKit = {
+live,
+box(element) {
+if (!(element instanceof HTMLElement)) { const r = element.getBoundingClientRect(); return { x: r.left + scrollX, y: r.top + scrollY, w: r.width, h: r.height }; }
+let x = 0, y = 0, node = element;
+while (node) { x += node.offsetLeft; y += node.offsetTop; node = node.offsetParent; }
+return { x, y, w: element.offsetWidth, h: element.offsetHeight };
+},
+set(element, vars) { for (const [name, value] of Object.entries(vars)) element.style.setProperty(name, String(value)); },
+measure(fn) { if (!live) return; measures.add(fn); run(fn); },
+scene(id, fn) {
+if (!live) return;
+try { fn(); } catch (error) {
+console.error(`[motion-kit] scene ${id} failed; its section stays static`, error);
+document.querySelector(`style[data-8b-part="scene:${id}"]`)?.setAttribute('media', 'not all');
+}
+}
+};
+if (!live) { window.motionReady = Promise.resolve(); return; }
+const number = () => document.querySelectorAll('[data-8b-items]').forEach(group => {
+let items;
+try { items = [...group.querySelectorAll(group.getAttribute('data-8b-items'))]; } catch { return; }
+items.forEach((item, index) => { item.style.setProperty('--i', index); item.style.setProperty('--n', items.length); });
+});
+number();
+measures.add(number);
+requestAnimationFrame(realign);
+new ResizeObserver(remeasure).observe(document.body);
+document.fonts?.ready.then(remeasure);
+addEventListener('load', remeasure);
+window.motionReady = (document.fonts?.ready ?? Promise.resolve()).then(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+})();
+(() => {
+const kit = window.motionKit;
+if (!kit.live || !matchMedia('(pointer: fine)').matches) return;
+let target = scrollY, current = scrollY, last = 0, running = false, paused = false;
+const inner = (node, dy) => {
+for (; node && node !== document.body && node !== document.documentElement; node = node.parentElement) {
+if (!/(auto|scroll)/.test(getComputedStyle(node).overflowY) || node.scrollHeight <= node.clientHeight) continue;
+if (dy > 0 ? node.scrollTop + node.clientHeight < node.scrollHeight - 1 : node.scrollTop > 0) return true;
+}
+return false;
+};
+const step = now => {
+current += (target - current) * (1 - Math.exp(-5.3 * Math.min(0.05, (now - last) / 1000)));
+last = now;
+if (Math.abs(target - current) < 0.5) current = target;
+scrollTo({ top: current, behavior: 'instant' });
+if (current !== target) requestAnimationFrame(step); else running = false;
+};
+addEventListener('wheel', event => {
+if (paused || event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) || inner(event.target, event.deltaY)) return;
+event.preventDefault();
+if (!running) target = current = scrollY;
+const unit = event.deltaMode === 1 ? 40 : event.deltaMode === 2 ? innerHeight : 1;
+target = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, target + event.deltaY * unit * 0.95));
+if (!running) { running = true; last = performance.now(); requestAnimationFrame(step); }
+}, { passive: false });
+kit.wheel = { stop() { paused = true; }, start() { paused = false; } };
+})();
+(() => {
+const kit = window.motionKit;
+if (!kit.live) return;
+const at = element => {
+const own = /^(\d{1,3}(?:\.\d+)?)%$/.exec((element.getAttribute('data-8b-enter') || '').trim());
+return own && +own[1] <= 100 ? own[1] / 100 : 0.88;
+};
+let pending = [...document.querySelectorAll('[data-8b-motion]')].map(element => ({ element, y: 0, at: at(element) }));
+let queued = false;
+const check = () => {
+queued = false;
+pending = pending.filter(item => {
+if (item.y > scrollY + innerHeight * item.at) return true;
+item.element.classList.add('is-in');
+return false;
+});
+};
+const queue = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+kit.measure(() => { pending.forEach(item => { item.y = kit.box(item.element).y; }); queue(); });
+addEventListener('scroll', queue, { passive: true });
+})();
+(() => {
+const kit = window.motionKit;
+if (!kit.live) return;
+const sheet = new CSSStyleSheet();
+sheet.replaceSync('.line{display:block;overflow:clip;padding-block:.12em;margin-block:-.12em}.line:not(:last-child){margin-bottom:0}.line+.line{margin-top:-.24em}.line+.line>.line__in{text-indent:0}:where(h1,h2,h3,h4,h5,h6,p,div,blockquote,figcaption,dd,dt):where([data-8b-split="lines"]:has(>.line)){display:flow-root}.line__in{display:block}.kit-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}');
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+const sources = new WeakMap(), widths = new WeakMap();
+const graphemes = typeof Intl.Segmenter === 'function'
+? text => [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text)].map(part => part.segment)
+: text => [...text];
+const span = (className, text) => { const element = document.createElement('span'); element.className = className; if (text != null) element.textContent = text; return element; };
+const split = element => {
+const mode = element.getAttribute('data-8b-split');
+if (sources.has(element)) element.innerHTML = sources.get(element); else sources.set(element, element.innerHTML);
+const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT), texts = [];
+while (walker.nextNode()) texts.push(walker.currentNode);
+let index = 0;
+for (const node of texts) {
+const fragment = document.createDocumentFragment();
+for (const piece of node.data.split(/(\s+)/)) {
+if (!piece) continue;
+if (/^\s+$/.test(piece)) { fragment.append(piece); continue; }
+const word = span('w');
+if (mode === 'chars') {
+word.setAttribute('aria-hidden', 'true');
+for (const character of graphemes(piece)) { const c = span('c', character); c.style.setProperty('--i', index++); word.append(c); }
+} else {
+word.textContent = piece;
+if (mode === 'words') word.style.setProperty('--i', index++);
+}
+fragment.append(word);
+}
+node.replaceWith(fragment);
+}
+if (mode === 'chars') element.append(span('kit-sr', element.textContent.replace(/\s+/g, ' ').trim()));
+if (mode === 'lines') {
+const lines = [];
+let top = null;
+for (const child of [...element.childNodes]) {
+const probe = child.nodeType === 1 ? child : null;
+const at = probe ? probe.getBoundingClientRect().top : top;
+if (probe && (top === null || Math.abs(at - top) > 2)) { lines.push([]); top = at; }
+if (!lines.length) lines.push([]);
+lines.at(-1).push(child);
+}
+lines.forEach((nodes, i) => {
+const line = span('line'), inner = span('line__in');
+line.style.setProperty('--i', i);
+nodes[0].before(line);
+inner.append(...nodes);
+line.append(inner);
+});
+index = lines.length;
+widths.set(element, element.clientWidth);
+}
+element.style.setProperty('--n', index);
+};
+const pending = [];
+let busy = false;
+const drain = () => {
+if (busy) return;
+const element = pending.shift();
+if (!element) return;
+busy = true;
+setTimeout(() => { try { split(element); } catch (error) { console.error('[motion-kit] split failed', error); } busy = false; drain(); }, 0);
+};
+const near = new IntersectionObserver(entries => entries.forEach(entry => {
+if (!entry.isIntersecting) return;
+near.unobserve(entry.target);
+pending.push(entry.target);
+drain();
+}), { rootMargin: '100% 0px 100% 0px' });
+(document.fonts?.ready ?? Promise.resolve()).then(() => document.querySelectorAll('[data-8b-split]').forEach(element => near.observe(element)));
+kit.measure(() => document.querySelectorAll('[data-8b-split="lines"]').forEach(element => {
+if (sources.has(element) && widths.get(element) !== element.clientWidth) { pending.push(element); drain(); }
+}));
+})();
+(() => {
+if (!window.motionKit.live) return;
+const sheet = new CSSStyleSheet();
+sheet.replaceSync('[data-8b-off],[data-8b-off]::before,[data-8b-off]::after{animation-play-state:paused!important}');
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+const watch = new IntersectionObserver(entries => entries.forEach(entry => entry.target.toggleAttribute('data-8b-off', !entry.isIntersecting)));
+const watched = new WeakSet();
+const scan = () => document.getAnimations().forEach(animation => {
+const element = animation.effect?.target;
+if (!element || watched.has(element) || animation.effect.getTiming().iterations !== Infinity || animation.timeline !== document.timeline) return;
+watched.add(element);
+watch.observe(element);
+});
+scan();
+addEventListener('load', scan);
+document.addEventListener('animationstart', scan, true);
+})();
+</script>
+<script data-8b-part="scene-script:opening">
+motionKit.scene('opening', () => {
+  const section = document.getElementById('opening');
+  const backdrop = section.querySelector('.op__backdrop');
+  const disc = section.querySelector('.op__disc');
+  motionKit.measure(() => {
+    const box = motionKit.box(backdrop), d = motionKit.box(disc);
+    const cx = d.x + d.w / 2 - box.x, cy = d.y + d.h / 2 - box.y;
+    const far = Math.hypot(Math.max(cx, box.w - cx), Math.max(cy, box.h - cy));
+    motionKit.set(section, { '--opening-cover': ((far + 8) / (d.w / 2)).toFixed(4) });
   });
 });
 </script>
-<script data-8b-part="scene:pour-steps">
-queueMotion(() => {
-  gsap.matchMedia().add({ wide: '(min-width: 900px) and (prefers-reduced-motion: no-preference)', narrow: '(max-width: 899px) and (prefers-reduced-motion: no-preference)' }, context => {
-    const section = document.getElementById('on-tap');
-    const word = section.querySelector('.tap__big');
-    const cards = [...section.querySelectorAll('.tap__card')];
-    gsap.fromTo(word, { xPercent: 14 }, { xPercent: 0, ease: 'none', scrollTrigger: { id: 'pour-steps:word', trigger: word, start: 'top bottom', end: 'bottom 40%', scrub: .5 } });
-    if (context.conditions.wide) {
-      const first = cards[0];
-      const timeline = gsap.timeline({ scrollTrigger: { id: 'pour-steps', trigger: section.querySelector('.tap__stairs'), start: 'top 82%', end: 'bottom 78%', scrub: .6, invalidateOnRefresh: true } });
-      cards.forEach((card, i) => {
-        const at = i * .5;
-        timeline
-          .fromTo(card, { y: () => first.offsetTop - card.offsetTop }, { y: 0, duration: 1, ease: 'power2.inOut' }, at)
-          .add(effects.pour(card.querySelector('.tap__fill'), { duration: .9 }), at + .15)
-          .fromTo(card.querySelectorAll(':scope > :not(.tap__fill)'), { opacity: 0 }, { opacity: 1, duration: .35 }, at + .55);
-      });
-    } else {
-      cards.forEach((card, i) => {
-        gsap.timeline({ scrollTrigger: { id: `pour-steps:card-${i}`, trigger: card, start: 'top 92%', end: 'top 50%', scrub: .5 } })
-          .add(effects.pour(card.querySelector('.tap__fill'), { duration: 1 }), 0)
-          .fromTo(card.querySelectorAll(':scope > :not(.tap__fill)'), { opacity: 0 }, { opacity: 1, duration: .4 }, .5);
-      });
-    }
-  });
+<script data-8b-part="scene-script:wave">
+motionKit.scene('wave', () => {
+  const track = document.querySelector('#overheard .oh__track');
+  track.append(...[...track.children].map(item => {
+    const clone = item.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.inert = true;
+    return clone;
+  }));
 });
 </script>
-<script data-8b-part="scene:wheel">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('brew-day');
-    const rim = section.querySelector('.bd__rim');
-    const stations = [...section.querySelectorAll('.bd__station')];
-    section.setAttribute('data-wheel', '');
-    const step = () => parseFloat(getComputedStyle(section).getPropertyValue('--bd-step')) || 22;
-    const timeline = gsap.timeline({ scrollTrigger: { id: 'wheel', trigger: section, start: 'top top', end: 'bottom bottom', scrub: .6, invalidateOnRefresh: true } });
-    for (let k = 1; k < stations.length; k++) {
-      const at = (k - 1) * 1.5 + .3;
-      const vars = angle => ({ rotation: angle, duration: 1, ease: 'power2.inOut' });
-      if (k === 1) {
-        timeline.fromTo(rim, { rotation: 0 }, vars(() => -step()), at);
-        stations.forEach((station, i) => timeline.fromTo(station, { rotation: () => i * step() }, vars(() => (i - 1) * step()), at));
-      } else {
-        timeline.to(rim, vars(() => -k * step()), at);
-        stations.forEach((station, i) => timeline.to(station, vars(() => (i - k) * step()), at));
-      }
-    }
-    timeline.to({}, { duration: .3 });
-    return () => section.removeAttribute('data-wheel');
-  });
-});
-</script>
-<script data-8b-part="scene:wave">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('overheard');
-    const title = section.querySelector('.oh__title');
-    const row = section.querySelector('.oh__row');
-    const track = row.querySelector('.oh__track');
-    const split = SplitText.create(title, { type: 'chars', charsClass: 'oh__char' });
-    const setY = split.chars.map(char => gsap.quickSetter(char, 'y', 'px'));
-    const setR = split.chars.map(char => gsap.quickSetter(char, 'rotation', 'deg'));
-    const draw = progress => {
-      const amplitude = Math.min(innerWidth * .04, 52) * Math.max(0, 1 - progress) ** 1.3;
-      split.chars.forEach((char, j) => {
-        const phase = j * .8 - progress * 10;
-        setY[j](amplitude * Math.sin(phase));
-        setR[j](amplitude * .16 * Math.cos(phase));
-      });
-    };
-    ScrollTrigger.create({ id: 'wave', trigger: title, start: 'top bottom', end: 'top 22%', onUpdate: self => draw(self.progress), onRefresh: self => draw(self.progress) });
-    const clones = [...track.children].map(item => {
-      const clone = item.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      clone.inert = true;
-      return clone;
-    });
-    track.append(...clones);
-    row.setAttribute('data-looping', '');
-    const observer = new IntersectionObserver(([entry]) => row.toggleAttribute('data-paused', !entry.isIntersecting));
-    observer.observe(row);
-    const hold = event => { if (event.pointerType === 'mouse') row.setAttribute('data-hover', ''); };
-    const release = () => row.removeAttribute('data-hover');
-    row.addEventListener('pointermove', hold);
-    row.addEventListener('pointerleave', release);
-    return () => {
-      row.removeEventListener('pointermove', hold);
-      row.removeEventListener('pointerleave', release);
-      row.removeAttribute('data-hover');
-      observer.disconnect();
-      clones.forEach(clone => clone.remove());
-      row.removeAttribute('data-looping');
-      row.removeAttribute('data-paused');
-      split.revert();
-    };
-  });
-});
-</script>
-<script data-8b-part="scene:deal">
-queueMotion(() => {
-  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-    const section = document.getElementById('events');
-    const list = section.querySelector('.ev__list');
-    const rows = [...list.querySelectorAll('.ev__row')];
-    const timeline = gsap.timeline({ scrollTrigger: { id: 'deal', trigger: list, start: 'top 82%', end: 'bottom 62%', scrub: .5, invalidateOnRefresh: true } });
-    rows.forEach((row, i) => {
-      gsap.set(row, { position: 'relative', zIndex: rows.length - i });
-      if (!i) return;
-      timeline.fromTo(row, { y: () => rows[0].offsetTop - row.offsetTop + i * 7, rotation: i % 2 ? 2.4 : -1.8 }, { y: 0, rotation: 0, duration: 1, ease: 'power2.out' }, (i - 1) * .5);
-    });
+<script data-8b-part="scene-script:deal">
+motionKit.scene('deal', () => {
+  const rows = [...document.querySelectorAll('#events .ev__list > li')];
+  motionKit.measure(() => {
+    const top = motionKit.box(rows[0]).y;
+    rows.forEach((row, i) => motionKit.set(row, { '--events-y': `${top - motionKit.box(row).y + i * 7}px` }));
   });
 });
 </script>
